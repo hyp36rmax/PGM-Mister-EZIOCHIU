@@ -8,6 +8,18 @@ The purpose of this repository is to preserve the latest publicly available rele
 
 All original credit for the PGM MiSTer FPGA Core belongs to Eizo Chiu. This repository is intended solely as a community preservation and feedback resource.
 
+# Original README by Eizo Chiu
+
+The following section is preserved from the last publicly available release of the PGM MiSTer FPGA Core and is included for historical and reference purposes.
+
+## Preservation Notes
+
+This repository is intended to preserve documentation, testing results, and publicly released materials.
+
+If Eizo Chiu requests modifications, attribution updates, removal of specific content, or transfer of stewardship, maintainers will review such requests in good faith.
+
+Development ownership of the original PGM MiSTer FPGA Core remains attributed to Eizo Chiu.
+
 # PGM for MiSTer FPGA
 
 **English** | [简体中文](README.zh-CN.md)
