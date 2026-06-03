@@ -1,0 +1,43 @@
+<misterromdescription>
+	<name>Dragon World II (ver. 110X, Export)</name>
+	<setname>drgw2</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff06">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="1,5,6" ids="Japan,China,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|drgw2.zip">
+        <part>EC 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20" crc="78c15fa2"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom" crc="1a7123a0"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom" crc="45ae7159"/>
+
+        <part>03 00080000 00100000</part>
+        <part name="dragon_ii_v-110x.u2" crc="1978106b"/>
+
+        <part>04 00400000 00180000</part>
+        <part name="pgm_t0200.u7" crc="b0f6534d"/>
+
+        <part>06 00400000 00000000</part>
+        <part name="pgm_a0200.u5" crc="13b95069"/>
+
+        <part>07 00400000 00000000</part>
+        <part name="pgm_b0200.u9" crc="932d0f13"/>
+	</rom>
+</misterromdescription>

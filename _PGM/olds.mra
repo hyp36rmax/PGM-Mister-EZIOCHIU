@@ -1,0 +1,67 @@
+<misterromdescription>
+	<name>Oriental Legend Super / Xiyou Shi E Chuan Super (ver. 101, Korean Board)</name>
+	<setname>olds</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff06">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="1,2,3,4,5,6" ids="Taiwan,China,Japan,Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|olds.zip">
+        <part>60 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00280000 00100000</part>
+        <interleave output="16">
+        <part name="sp_v101_u2.u2" crc="08eb9661" map="01"/>
+        <part name="sp_v101_u3.u3" crc="0a358c1e" map="10"/>
+        </interleave>
+        <interleave output="16">
+        <part name="sp_v101_u4.u4" crc="766570e0" map="01"/>
+        <part name="sp_v101_u5.u5" crc="58662e12" map="10"/>
+        </interleave>
+        <part name="sp_v101_u1.u1" crc="2b2f4f1e"/>
+
+        <part>04 00600000 00180000</part>
+        <part name="pgm_t0500.u18" crc="d881726c"/>
+        <part name="pgm_t0501.u19" crc="d2106864"/>
+
+        <part>05 00200000 00400000</part>
+        <part name="pgm_m0500.u1" crc="37928cdd"/>
+
+        <part>06 01C00000 00000000</part>
+        <part name="pgm_a0500.u5" crc="80a59197"/>
+        <part name="pgm_a0501.u6" crc="98c931b1"/>
+        <part name="pgm_a0502.u7" crc="c3fcdf1d"/>
+        <part name="pgm_a0503.u8" crc="066dffec"/>
+        <part name="pgm_a0504.u11" crc="45337583"/>
+        <part name="pgm_a0505.u12" crc="5b8cf3a5"/>
+        <part name="pgm_a0506.u13" crc="087ac60c"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="pgm_b0500.u9" crc="cde07f74"/>
+        <part name="pgm_b0501.u10" crc="1546c2e9"/>
+        <part name="pgm_b0502.u15" crc="e97b31c3"/>
+        <part name="pgm_b0503.u16" crc="e41d98e4"/>
+
+        <part>0D 00010000 00000000</part>
+        <part name="sp_v101_u6.u6" crc="097046bc"/>
+	</rom>
+</misterromdescription>

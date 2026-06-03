@@ -1,0 +1,53 @@
+<misterromdescription>
+	<name>Dragon World 3 / Zhongguo Long 3 / Dungfong Zi Zyu 3 / Chuugokuryuu 3 Special (ver. 106)</name>
+	<setname>drgw3</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff06">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="1,2,3,4,5,6,7" ids="Japan,Korea,Taiwan,Hong Kong,China,World,Singapore"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|drgw3.zip">
+        <part>FD 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20" crc="78c15fa2"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom" crc="1a7123a0"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom" crc="45ae7159"/>
+
+        <part>03 00100000 00100000</part>
+        <interleave output="16">
+        <part name="dw3_v106_u12.u12" crc="c3f6838b" map="01"/>
+        <part name="dw3_v106_u13.u13" crc="28284e22" map="10"/>
+        </interleave>
+
+        <part>04 00400000 00180000</part>
+        <part name="pgm_t0400.u18" crc="b70f3357"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="pgm_m0400.u1" crc="031eb9ce"/>
+
+        <part>06 00800000 00000000</part>
+        <part name="pgm_a0400.u9" crc="dd7bfd40"/>
+        <part name="pgm_a0401.u10" crc="cab6557f"/>
+
+        <part>07 00400000 00000000</part>
+        <part name="pgm_b0400.u13" crc="4bb87cc0"/>
+
+        <part>0D 00010000 00000000</part>
+        <part name="dw3_text_u15.u15" crc="03dc4fdf"/>
+	</rom>
+</misterromdescription>

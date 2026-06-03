@@ -1,0 +1,46 @@
+<misterromdescription>
+	<name>Ketsui: Kizuna Jigoku Tachi (2003/01/01. Master Ver., bootleg cartridge conversion)</name>
+	<setname>ketbl</setname>
+	<rbf>PGM</rbf>
+	<rotation>vertical</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="fffe">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|ketbl.zip|ket.zip">
+		<part>00 00</part>
+
+		<part>00 00020000 00000000</part>
+		<part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+		<part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+		<part name="pgm_m01s.rom"/>
+
+        <part>03 00200000 00000000</part>
+        <part name="ketsui_u1.bin" offset="2097152" length="2097152"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="t04701w064.u19" crc="2665b041"/>
+
+        <part>05 00400000 00400000</part>
+    	<part name="m04701b032.u17" crc="b46e22d1"/>
+
+        <part>06 01000000 00000000</part>
+	    <part name="a04701w064.u7" crc="5ef1b94b"/>
+	    <part name="a04702w064.u8" crc="26d6da7f"/>
+
+        <part>07 00800000 00000000</part>
+	    <part name="b04701w064.u1" crc="1bec008d"/>
+	</rom>
+</misterromdescription>

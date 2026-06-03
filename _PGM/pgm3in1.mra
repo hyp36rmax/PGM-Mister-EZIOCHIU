@@ -1,0 +1,57 @@
+<misterromdescription>
+	<name>Shan Liang San He Yi (Flash 3-in-1) (V102 08/23/04 13:03:26)</name>
+	<setname>pgm3in1</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff03">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3" ids="China,Taiwan,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|pgm3in1.zip">
+        <part>DB 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20" crc="78c15fa2"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom" crc="1a7123a0"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom" crc="45ae7159"/>
+
+        <part>03 00200000 00100000</part>
+        <part name="v-102cn.u3" crc="72e06b2b"/>
+
+        <part>04 00200000 00180000</part>
+        <part name="u5.u5" crc="da375a50"/>
+
+        <part>05 00200000 00400000</part>
+        <part name="pgm_m1100.u17" crc="fb1515f8"/>
+
+        <part>05 00800000 00800000</part>
+        <part name="u16.u16" crc="714c33e5"/>
+
+        <part>06 02400000 00000000</part>
+        <part name="pgm_a1100.u4" crc="e32ce499"/>
+        <part name="pgm_a1101.u5" crc="4e7568bc"/>
+        <part name="pgm_a1102.u6" crc="6da7c143"/>
+        <part name="pgm_a1103.u7" crc="0ebebfdc"/>
+        <part name="ext_bit_cg.u20" crc="fe314754"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="pgm_b1100.u8" crc="fa53d6f6"/>
+        <part name="pgm_b1101.u9" crc="001e4c81"/>
+
+        <part>07 00100000 00F00000</part>
+        <part name="ext_bit_map.u21" crc="fe31dca6" length="1048576"/>
+	</rom>
+</misterromdescription>

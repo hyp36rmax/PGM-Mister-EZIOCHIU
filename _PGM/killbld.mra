@@ -1,0 +1,55 @@
+<misterromdescription>
+	<name>The Killing Blade / Ao Jian Kuang Dao (ver. 109, Chinese Board)</name>
+	<setname>killbld</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff21">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="22,23,24,25,32,33" ids="Taiwan,China,Hong Kong,Japan,Korea,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|killbld.zip">
+        <part>53 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00200000 00100000</part>
+        <part name="p0300_v109.u9" crc="2fcee215"/>
+
+        <part>04 00400000 00180000</part>
+        <part name="pgm_t0300.u14" crc="0922f7d9"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="pgm_m0300.u1" crc="93159695"/>
+
+        <part>06 01400000 00000000</part>
+        <part name="pgm_a0300.u9" crc="3f9455d3"/>
+        <part name="pgm_a0301.u10" crc="92776889"/>
+        <part name="pgm_a0303.u11" crc="33f5cc69"/>
+        <part name="pgm_a0306.u12" crc="cc018a8e"/>
+        <part name="pgm_a0307.u2" crc="bc772e39"/>
+
+        <part>07 00A00000 00000000</part>
+        <part name="pgm_b0300.u13" crc="7f876981"/>
+        <part name="pgm_b0302.u14" crc="eea9c502"/>
+        <part name="pgm_b0303.u15" crc="77a9652e"/>
+
+        <part>0D 00010000 00000000</part>
+        <part name="kb_u2_v109.u2" crc="de3eae63"/>
+	</rom>
+</misterromdescription>

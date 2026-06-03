@@ -1,0 +1,50 @@
+<misterromdescription>
+	<name>Knights of Valour - Gai Shi Ying Xiong Jia Qiang Ban</name>
+	<setname>kovgsyxjqb</setname>
+	<rbf>PGM-KOVGSYX</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="fffe">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|kovgsyxjqb.zip">
+		<part>90 00</part>
+
+		<part>00 00020000 00000000</part>
+		<part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+		<part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+		<part name="pgm_m01s.rom"/>
+
+        <part>03 00400000 00100000</part>
+        <part name="27c322.u3" crc="4018559f"/>
+
+        <part>04 01000000 00180000</part>
+        <part name="t01.u8" crc="d498d97f"/>
+
+        <part>05 01000000 00800000</part>
+        <part name="m01.u5" crc="af5e9be0"/>
+
+        <part>06 03000000 00000000</part>
+	    <part name="a01.u8" crc="25ae3efd"/>
+	    <part name="a23.u9" crc="1f51c140"/>
+	    <part name="a45.u10" crc="5e44fd82"/>
+
+        <part>07 01000000 00000000</part>
+	    <part name="b01.u6" crc="779825d3"/>
+
+        <part>08 00010000 00000000</part>
+        <part name="28-LPC2132FBD64-QFP64-END-20251122.BIN" crc="0c381ff4"/>
+	</rom>
+</misterromdescription>

@@ -1,0 +1,49 @@
+<misterromdescription>
+	<name>Puzzli 2 Super / Pao Pao Yu Super (ver. 200)</name>
+	<setname>puzzli2s</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff05">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5" ids="Taiwan,China,Japan (Alta license),Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|puzzli2.zip|puzzli2s.zip">
+        <part>C9 01</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20" crc="78c15fa2"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom" crc="1a7123a0"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom" crc="45ae7159"/>
+
+        <part>03 00100000 00100000</part>
+        <interleave output="16">
+        <part name="2sp_v200.u4" crc="fa5c86c1" map="01"/>
+        <part name="2sp_v200.u3" crc="2a5ba8a6" map="10"/>
+        </interleave>
+
+        <part>04 00200000 00180000</part>
+        <part name="pgm_t0900.u9" crc="70615611"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="pgm_m0900.u2" crc="9ea7af2e"/>
+
+        <part>06 00400000 00000000</part>
+        <part name="pgm_a0900.u3" crc="14911251"/>
+
+        <part>07 00200000 00000000</part>
+        <part name="pgm_b0900.u4" crc="6f0638b6"/>
+	</rom>
+</misterromdescription>

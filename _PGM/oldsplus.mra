@@ -1,0 +1,50 @@
+<misterromdescription>
+	<name>Oriental Legend 2 (Korea) / Xiyou Shi E Chuan Qunmoluanwu (World, China, Japan, Hong Kong, Taiwan) (ver. 205) [Oriental Ex]</name>
+	<setname>oldsplus</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff01">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="1,2,3,4,5,6" ids="China,Japan,Korea,Hong Kong,World,Taiwan"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|oldsplus.zip">
+        <part>75 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00400000 00100000</part>
+        <part name="v-205cn.u10" crc="923f7246"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="igs_t05301w064.u2" crc="8257bbb0"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="igs_w05301b032.u5" crc="86ec83bc"/>
+
+        <part>06 02000000 00000000</part>
+        <part name="igs_a05301w064.u3" crc="57946fd2"/>
+        <part name="igs_a05302w064.u4" crc="3459a0b8"/>
+        <part name="igs_a05303w064.u6" crc="13475d85"/>
+        <part name="igs_a05304w064.u8" crc="f03ef7a6"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="igs_b05301w064.u9" crc="fd98f503"/>
+        <part name="igs_b05302w064.u11" crc="9f6094a8"/>
+	</rom>
+</misterromdescription>

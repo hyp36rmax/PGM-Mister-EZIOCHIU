@@ -1,0 +1,53 @@
+<misterromdescription>
+	<name>Huanle Liuhe Yi (Happy 6-in-1) (M68K ver. V101, ARM ver. V102CN)</name>
+	<setname>happy6</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff00">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,3,255" ids="China,Singapore,Don't Change"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|happy6.zip">
+        <part>40 90</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20" crc="78c15fa2"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom" crc="1a7123a0"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom" crc="45ae7159"/>
+
+        <part>03 00080000 00100000</part>
+        <part name="s101xx_u5.u5" crc="aa4646e3"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="t01w64m_u29.u29" crc="2d3feb8b"/>
+
+        <part>05 00800000 00400000</part>
+        <part name="w01w64m_u17.u17" crc="7e23e2be"/>
+
+        <part>06 01000000 00000000</part>
+        <part name="a01w64m_u5.u5" crc="bbaa3df3"/>
+        <part name="a02w64m_u6.u6" crc="f8c9cd36"/>
+
+        <part>07 00800000 00000000</part>
+        <part name="b01w64m_u19.u19" crc="73f5f225"/>
+
+        <part>08 00003E78 00000188</part>
+        <part name="happy6_igs027a_v100_china.bin" crc="ed530445"/>
+
+        <part>09 00400000 00000000</part>
+        <part name="v-102cn_u26.u26" crc="310510fb"/>
+	</rom>
+</misterromdescription>

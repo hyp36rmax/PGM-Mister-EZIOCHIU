@@ -1,0 +1,58 @@
+<misterromdescription>
+	<name>S.V.G. - Spectral vs Generation / Sheng Mo Shiji (M68k label V200) (ARM label V200, ROM 10/11/05 S.V.G V201)</name>
+	<setname>svg</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ffff">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5,6,255" ids="China,Taiwan,Japan (AMI license),Korea,Hong Kong,Spanish Territories,World,Don't Change"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|svg.zip">
+        <part>40 80</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00080000 00100000</part>
+        <part name="svg_v200_u30.u30" crc="34c18f3f"/>
+
+        <part>04 00200000 00180000</part>
+        <part name="igs_t05601w016.u29" crc="03e110dc"/>
+
+        <part>05 00C00000 00400000</part>
+        <part name="igs_w05601b064.u5" crc="bfe61a71"/>
+        <part name="igs_w05602b032.u7" crc="0685166d"/>
+
+        <part>06 01C00000 00000000</part>
+        <part name="igs_a05601w064.u3" crc="ea6453e4"/>
+        <part name="igs_a05602w064.u4" crc="6d00621b"/>
+        <part name="igs_a05603w064.u6" crc="7b71c64f"/>
+        <part name="igs_a05604w032.u8" crc="9452a567"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="igs_b05601w064.u9" crc="35c0a489"/>
+        <part name="igs_b05602w064.u11" crc="8aad3f85"/>
+
+        <part>08 00003E78 00000188</part>
+        <part name="svg_igs027a_v200_china.bin" crc="72b73169"/>
+
+        <part>09 00800000 00000000</part>
+        <part name="epr.u26" crc="46826ec8"/>
+        <part name="epr.u36" crc="fa5f3901"/>
+	</rom>
+</misterromdescription>

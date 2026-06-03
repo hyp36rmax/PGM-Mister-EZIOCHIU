@@ -1,0 +1,47 @@
+<misterromdescription>
+	<name>Photo Y2K 2 / Chaoji Bi Yi Bi 2 / Dajia Lai Zhao Cha 2 / Real and Fake 2 Photo Y2K (M101XX 05/25/01 11:02:54)</name>
+	<setname>py2k2</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff03">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="1,0" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="1,0" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5,6" ids="Taiwan,China,Japan (Alta license),World,Korea,Hong Kong,Singapore / Malaysia"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|py2k2.zip">
+        <part>A7 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20" crc="78c15fa2"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom" crc="1a7123a0"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom" crc="45ae7159"/>
+
+        <part>03 00200000 00100000</part>
+        <part name="y2k2_m-101xx.u1" crc="c47795f1"/>
+
+        <part>05 00200000 00400000</part>
+        <part name="pgm_m1100.u3" crc="fb1515f8"/>
+
+        <part>06 02000000 00000000</part>
+        <part name="pgm_a1100.u6" crc="e32ce499"/>
+        <part name="pgm_a1101.u7" crc="4e7568bc"/>
+        <part name="pgm_a1102.u8" crc="6da7c143"/>
+        <part name="pgm_a1103.u9" crc="0ebebfdc"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="pgm_b1100.u4" crc="fa53d6f6"/>
+        <part name="pgm_b1101.u5" crc="001e4c81"/>
+	</rom>
+</misterromdescription>
