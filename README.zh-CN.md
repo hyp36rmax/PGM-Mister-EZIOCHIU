@@ -1,3 +1,28 @@
+# PGM MiSTer FPGA 社区维护与资料保存项目
+
+PGM MiSTer FPGA Core 最初由 Eizo Chiu 开发（https://github.com/eziochiu/）。
+
+本仓库基于截至 2026 年 6 月 2 日最后一次公开发布的版本建立。
+
+本仓库的目的是保存该核心最后公开可获取的版本，并汇总社区测试结果、兼容性报告、错误报告以及技术反馈，以便在 Eizo Chiu 未来选择继续开发该核心时，能够为其提供参考和支持。
+
+PGM MiSTer FPGA Core 的所有原创开发成果及相关贡献均归 Eizo Chiu 所有。本仓库仅作为社区资料保存与反馈收集的平台。
+
+
+## Eizo Chiu 原始 README
+
+以下内容保留自 PGM MiSTer FPGA Core 最后一次公开发布版本的 README，仅供历史记录与技术参考之用。
+
+
+## 保存说明
+
+本仓库旨在保存项目文档、测试结果以及此前已公开发布的相关资料。
+
+如果 Eizo Chiu 提出修改请求、署名更新请求、内容移除请求，或希望接管本仓库的维护工作，现任维护者将本着善意与尊重原创作者意愿的原则进行处理。
+
+PGM MiSTer FPGA Core 原始项目的开发权及原创归属始终属于 Eizo Chiu。
+
+
 # PGM for MiSTer FPGA（PGM 街机核心）
 
 [English](README.md) | **简体中文**
