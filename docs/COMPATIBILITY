@@ -1,6 +1,6 @@
 # Compatibility List
 
-This document tracks community verified game compatibility.
+This document tracks community verified game compatibility for the PGM MiSTer FPGA Core.
 
 Legend:
 
@@ -13,33 +13,81 @@ Legend:
 
 ---
 
-## Knights of Valour Series
+# Knights of Valour Series — 三国战纪
 
-| Game | Status | Notes |
-|--------|--------|--------|
-| Knights of Valour | ❓ | Awaiting verification |
-| Knights of Valour Plus | ❓ | Awaiting verification |
-| Knights of Valour Super Heroes | ❓ | Awaiting verification |
-| Knights of Valour 2 | ❓ | Awaiting verification |
-
----
-
-## Oriental Legend Series
-
-| Game | Status | Notes |
-|--------|--------|--------|
-| Oriental Legend | ❓ | Awaiting verification |
-| Oriental Legend Super | ❓ | Awaiting verification |
-| Oriental Legend Super Plus | ❓ | Awaiting verification |
+| MRA | Title | Status | Notes | Verified By |
+|------|--------|--------|--------|-------------|
+| kov | Knights of Valour | ❓ | Awaiting community verification | |
+| kovplus | Knights of Valour Plus | ❓ | Awaiting community verification | |
+| kovsh | Knights of Valour Super Heroes | ❓ | Awaiting community verification | |
+| kovshp | Knights of Valour Super Heroes Plus | ❓ | Awaiting community verification | |
+| kov2 | Knights of Valour 2 | ❓ | Awaiting community verification | |
+| kov2p | Knights of Valour 2 Plus – Nine Dragons | ❓ | Awaiting community verification | |
+| kovgsyxjqb | Knights of Valour – Gai Shi Ying Xiong Jia Qiang Ban (bootleg) | ❓ | Awaiting community verification | |
+| kovzscs | Knights of Valour – Zhan Shen Chuan Shuo Te Bie Ban (bootleg) | ❓ | Awaiting community verification | |
+| kovytzy | Knights of Valour Super Heroes – Yi Tong Zhong Yuan | ❓ | Awaiting community verification | |
 
 ---
 
-## Cave Shooters
+# Oriental Legend Series — 西游释厄传
 
-| Game | Status | Notes |
-|--------|--------|--------|
-| DoDonPachi II | ❓ | Awaiting verification |
-| DoDonPachi III | ❓ | Awaiting verification |
-| DoDonPachi Dai-Ou-Jou | ❓ | Awaiting verification |
-| Ketsui | ❓ | Awaiting verification |
-| EspGaluda | ❓ | Awaiting verification |
+| MRA | Title | Status | Notes | Verified By |
+|------|--------|--------|--------|-------------|
+| orlegend | Oriental Legend | ❓ | Awaiting community verification | |
+| olds | Oriental Legend Super | ❓ | Awaiting community verification | |
+| oldsplus | Oriental Legend Super Plus | ❓ | Awaiting community verification | |
+
+---
+
+# Fighting / Action
+
+| MRA | Title | Status | Notes | Verified By |
+|------|--------|--------|--------|-------------|
+| killbld | The Killing Blade | ❓ | Awaiting community verification | |
+| killbldp | The Killing Blade Plus | ❓ | Awaiting community verification | |
+| martmast | Martial Masters | ❓ | Awaiting community verification | |
+| theglad | The Gladiator | ❓ | Awaiting community verification | |
+| svg | S.V.G. – Spectral vs Generation | ❓ | Awaiting community verification | |
+| dmnfrnt | Demon Front | ❓ | Awaiting community verification | |
+
+---
+
+# Shoot 'em Ups
+
+| MRA | Title | Status | Notes | Verified By |
+|------|--------|--------|--------|-------------|
+| ddp2 | DoDonPachi II – Bee Storm | ❓ | Awaiting community verification | |
+| ddp3 | DoDonPachi III | ❓ | Awaiting community verification | |
+| ddpdoj | DoDonPachi Dai-Ou-Jou | ❓ | Awaiting community verification | |
+| ketbl | Ketsui (bootleg conversion) | ❓ | Awaiting community verification | |
+| espgalbl | EspGaluda (bootleg conversion) | ❓ | Awaiting community verification | |
+
+---
+
+# Puzzle / Quiz / Compilation
+
+| MRA | Title | Status | Notes | Verified By |
+|------|--------|--------|--------|-------------|
+| drgw2 | Dragon World II | ❓ | Awaiting community verification | |
+| drgw3 | Dragon World 3 | ❓ | Awaiting community verification | |
+| photoy2k | Photo Y2K (Real and Fake) | ❓ | Awaiting community verification | |
+| py2k2 | Photo Y2K2 | ❓ | Awaiting community verification | |
+| puzzli2 | Puzzli 2 (Pao Pao Yu) | ❓ | Awaiting community verification | |
+| puzzli2s | Puzzli 2 Super | ❓ | Awaiting community verification | |
+| puzlstar | Puzzle Star (Mohuan Xingzuo) | ❓ | Awaiting community verification | |
+| happy6 | Happy 6-in-1 | ❓ | Awaiting community verification | |
+| pgm3in1 | Flash 3-in-1 | ❓ | Awaiting community verification | |
+
+---
+
+## Compatibility Submission Template
+
+Please include:
+
+- MiSTer firmware version
+- SDRAM configuration (Single RAM / Dual RAM)
+- Video output (HDMI / Direct Video / Analog I/O)
+- Display type
+- Game tested
+- Result
+- Notes
