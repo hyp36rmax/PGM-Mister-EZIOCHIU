@@ -1,0 +1,27 @@
+# Changelog
+
+All notable repository changes will be documented here.
+
+---
+
+## 2026-06-03
+
+### Repository Created
+
+- Community preservation repository established.
+- Based on latest publicly available release.
+- Original documentation preserved.
+- Community issue tracking enabled.
+
+### Documentation Added
+
+- FEEDBACK.md
+- KNOWN_ISSUES.md
+- COMPATIBILITY.md
+- CHANGELOG.md
+
+### Initial Community Findings
+
+- Single SDRAM support documented.
+- HDMI compatibility documented.
+- Single SDRAM CRT compatibility investigation opened.
