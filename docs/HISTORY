@@ -1,0 +1,35 @@
+### Public Beta Releases
+
+Throughout development, public beta releases were made available to the MiSTer FPGA community.
+
+Major areas of development included:
+
+- IGS023 video implementation
+- ICS2115 sound implementation
+- IGS025 and IGS027 protection support
+- LPC2132 support for specific game variants
+- Expanded game compatibility
+
+### June 2026 Public Beta Release
+
+The final known public beta release introduced:
+
+- Single SDRAM support
+- Updated MRA structure
+- Continued game compatibility improvements
+- Additional refinements and bug fixes
+
+This release serves as the preservation baseline for this repository.
+
+This repository was created to preserve the latest publicly available beta version of the PGM MiSTer FPGA Core and provide a centralized location for community testing, documentation, compatibility reports, and technical feedback.
+
+Community Preservation Repository:
+Created to preserve publicly available beta releases, technical documentation, and community findings for future reference.
+
+### End of Public Beta Availability
+
+In June 2026, the original repository was made private by Eizo Chiu, concluding the public beta period.
+
+The original author's decision is respected.
+
+This repository preserves the final publicly available beta version and associated documentation for historical and technical reference purposes.
