@@ -1,7 +1,12 @@
-# PGM-Mister-EZIO-CHIU-
-PGM Mister FPGA Core originally by EizoChiu (https://github.com/eziochiu/) based on latest release on 6/2/2026
+# PGM MiSTer FPGA Community Preservation Project
 
-Purpose of this repository is to preserve latest version and aggregate feedback if and when Ezio Chiu chooses to continue working on this core.
+PGM MiSTer FPGA Core originally developed by Eizo Chiu (https://github.com/eziochiu/).
+
+This repository is based on the latest publicly released version available as of June 2, 2026.
+
+The purpose of this repository is to preserve the latest publicly available release and aggregate community testing, compatibility reports, bug reports, and technical feedback should Eizo Chiu choose to continue development of the core in the future.
+
+All original credit for the PGM MiSTer FPGA Core belongs to Eizo Chiu. This repository is intended solely as a community preservation and feedback resource.
 
 # PGM for MiSTer FPGA
 
