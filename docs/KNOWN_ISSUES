@@ -1,0 +1,38 @@
+# Known Issues
+
+This document tracks confirmed and actively investigated issues.
+
+---
+
+## Issue #1 - Single SDRAM CRT Output
+
+Status: Open
+
+Description:
+Some users report that builds supporting Single SDRAM function correctly through HDMI but fail to display video through CRT-based configurations.
+
+Symptoms:
+- Black screen
+- No sync
+- HDMI remains functional
+
+Affected Configurations:
+- Single SDRAM
+- Direct Video
+- Analog Output
+
+Workaround:
+- Use HDMI output
+- Use previous Dual SDRAM release if CRT support is required
+
+Investigation Notes:
+Community testing suggests the issue may be related to FPGA compile configuration differences introduced during the transition from Dual SDRAM to Single SDRAM support.
+
+Reference:
+- GitHub Issue #1
+
+---
+
+## Additional Issues
+
+None currently documented.
