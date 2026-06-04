@@ -9,7 +9,7 @@ This document tracks confirmed and actively investigated issues.
 Status: Open
 
 Description:
-Some users report that builds supporting Single SDRAM function correctly through HDMI but fail to display video through CRT-based configurations.
+Some users report builds supporting Single SDRAM function correctly through HDMI but fail to display video through CRT-based configurations.
 
 Symptoms:
 - Black screen
