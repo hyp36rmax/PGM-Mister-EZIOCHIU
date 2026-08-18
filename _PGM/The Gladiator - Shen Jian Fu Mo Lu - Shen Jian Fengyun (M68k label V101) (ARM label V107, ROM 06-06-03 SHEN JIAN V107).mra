@@ -1,0 +1,232 @@
+<misterromdescription>
+	<name>The Gladiator / Shen Jian Fu Mo Lu / Shen Jian Fengyun (M68k label V101) (ARM label V107, ROM 06/06/03 SHEN JIAN V107)</name>
+	<setname>theglad</setname>
+	<rbf>PGM-027A-TYPE3</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ffff">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,3,4,5,6" ids="China,Taiwan,Korea,Hong Kong,Spanish Territories,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|theglad.zip">
+        <part>40 30</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00080000 00100000</part>
+        <part name="v101_u6.u6" crc="f799e866"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="igs_t04601w64m.u33" crc="e5dab371"/>
+
+        <part>05 00800000 00400000</part>
+        <part name="igs_w04601b64m.u1" crc="5f15ddb3"/>
+
+        <part>06 01800000 00000000</part>
+        <part name="igs_a04601w64m.u2" crc="d9b2e004"/>
+        <part name="igs_a04602w64m.u4" crc="14f22308"/>
+        <part name="igs_a04603w64m.u6" crc="8f621e17"/>
+
+        <part>07 00C00000 00000000</part>
+        <part name="igs_b04601w64m.u11" crc="ee72bccf"/>
+        <part name="igs_b04602w32m.u12" crc="7dba9c38"/>
+
+        <part>08 00003E78 00000188</part>
+        <part name="theglad_igs027a_v100_overseas.bin" crc="02fe6f52"/>
+
+        <part>09 00200000 00000000</part>
+        <part name="v107_u26.u26" crc="f7c61357"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="All Martial Arts">
+			00001010180002b20000000000000001
+			00001010180002b40000000000000001
+		</cheat>
+		<cheat name="All Tournament Bosses">
+			00001010180002c20000000000000001
+		</cheat>
+		<cheat name="Infinite Time">
+			00001010180000cc0000000000000063
+		</cheat>
+		<cheat name="Full-screen Attack">
+			000020200803c4a80000000000000000
+			000020200803b77c0000000000000000
+		</cheat>
+		<cheat name="Player - One Hit Adds Energy">
+			00002020080201f20000000000004600
+		</cheat>
+		<cheat name="Player - One Hit Wins Clash">
+			000020200804052e00000000000038ff
+		</cheat>
+		<cheat name="Player - Unlimited Jump">
+			0000202008017f460000000000004600
+			0000202008017f6a0000000000002000
+		</cheat>
+		<cheat name="Player - Unlimited Combo">
+			0000202008038a140000000000002000
+			0000202008038b220000000000002000
+		</cheat>
+		<cheat name="Player - Skill Text Always Appears">
+			000020200801d46e000000000000e001
+		</cheat>
+		<cheat name="Player - Skill Text Always Appears (also soldiers)">
+			000020200803808a0000000000004600
+			000020200801d42a000000000000e001
+			000020200801d46e000000000000e001
+		</cheat>
+		<cheat name="Act 1 - Chase Ye Xiang With A">
+			0000202008057e380000000000002000
+			0000202008057dcc0000000000002012
+		</cheat>
+		<cheat name="Player - Solo Team Attack">
+			00002020080429f00000000000004600
+			0000202008042b800000000000004600
+			0000202008042d900000000000004600
+		</cheat>
+		<cheat name="Player - Force Interrupt">
+			00002020080161560000000000004600
+			00002020080161480000000000004600
+			00002020080160b4000000000000e00b
+		</cheat>
+		<cheat name="Enemy - Lock 4P Enemy Count">
+			000020200802ad080000000000004600
+		</cheat>
+		<cheat name="P1 Infinite HP">
+			0000101018014b240000000000000040
+			00001010180158800000000000000040
+		</cheat>
+		<cheat name="P1 Invincible">
+			0000101018014c460000000000000001
+		</cheat>
+		<cheat name="P1 Max Score">
+			000010401801588800000000ffffffff
+		</cheat>
+		<cheat name="P1 Max EXP">
+			00001040180158700000000000ffffff
+		</cheat>
+		<cheat name="P1 Infinite Energy">
+			0000101018014c600000000000000009
+			00001010180158980000000000000009
+		</cheat>
+		<cheat name="P1 Max Reputation">
+			00001010180158b70000000000000018
+		</cheat>
+		<cheat name="P1 Can Walk Anywhere On Screen">
+			0000101018014b5a0000000000000001
+		</cheat>
+		<cheat name="P2 Infinite HP">
+			0000101018014d9c0000000000000040
+			0000101018015af80000000000000040
+		</cheat>
+		<cheat name="P2 Infinite Energy">
+			0000101018014ed80000000000000009
+			00001010180159ac0000000000000009
+		</cheat>
+		<cheat name="P2 Invincible">
+			0000101018014ebe0000000000000001
+		</cheat>
+		<cheat name="P2 Max Score">
+			000010401801599c00000000ffffffff
+		</cheat>
+		<cheat name="P2 Max EXP">
+			00001040180159840000000000ffffff
+		</cheat>
+		<cheat name="P3 Infinite HP">
+			00001010180150140000000000000040
+			0000101018015d700000000000000040
+		</cheat>
+		<cheat name="P3 Invincible">
+			00001010180151360000000000000001
+		</cheat>
+		<cheat name="P3 Infinite Energy">
+			00001010180151500000000000000009
+			0000101018015ac00000000000000009
+		</cheat>
+		<cheat name="P3 Max EXP">
+			0000104018015a980000000000ffffff
+		</cheat>
+		<cheat name="P3 Max Score">
+			0000104018015ab000000000ffffffff
+		</cheat>
+		<cheat name="P4 Infinite HP">
+			000010101801528c0000000000000040
+			0000101018015fe80000000000000040
+		</cheat>
+		<cheat name="P4 Infinite Energy">
+			00001010180153c80000000000000009
+			0000101018015bd40000000000000009
+		</cheat>
+		<cheat name="P4 Invincible">
+			00001010180153ae0000000000000001
+		</cheat>
+		<cheat name="P4 Max Score">
+			0000104018015bc400000000ffffffff
+		</cheat>
+		<cheat name="P4 Max EXP">
+			0000104018015bac0000000000ffffff
+		</cheat>
+		<cheat name="Story Mode One-hit Kill All Enemies">
+			00002010080225990000000000000021
+		</cheat>
+		<cheat name="Demon King Idle">
+			0000101018015dec0000000000000004
+			00001010180160640000000000000004
+			00001010180162dc0000000000000004
+		</cheat>
+		<cheat name="P1 AC Effect">
+			0000101018014b380000000000000005
+			0000101018014b3a0000000000000004
+			0000101018014bba0000000000000004
+			0000101018014bca0000000000000001
+			0000101018014bef0000000000000001
+		</cheat>
+		<cheat name="Infinite Combo">
+			0000101018015da20000000000000000
+			000010101801601a0000000000000000
+			00001010180162920000000000000000
+			000010101801650a0000000000000000
+			00001010180167820000000000000000
+			00001010180169fa0000000000000000
+			0000101018016c720000000000000000
+			0000101018016eea0000000000000000
+			00001010180171620000000000000000
+			00001010180173da0000000000000000
+			00001010180176520000000000000000
+		</cheat>
+		<cheat name="Force Clash With Demon King">
+			0000101018015e580000000000000001
+			00001010180160d00000000000000001
+			00001010180163480000000000000001
+			00001010180165c00000000000000001
+			00001010180168380000000000000001
+			0000101018016ab00000000000000001
+		</cheat>
+		<cheat name="Force Combo With Demon King">
+			0000101018015e440000000000000001
+			00001010180160bc0000000000000001
+			00001010180163340000000000000001
+		</cheat>
+		<cheat name="Hidden Stage Middle Route Han Shantong Appears">
+			000010101800090c0000000000000001
+		</cheat>
+		<cheat name="Super Move Text Easier">
+			0000104018014d2800000000000000ff
+		</cheat>
+	</cheats>
+</misterromdescription>

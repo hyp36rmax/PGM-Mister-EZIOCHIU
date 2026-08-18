@@ -1,0 +1,53 @@
+<misterromdescription>
+	<name>Chuugokuryuu Pretty Chance / Dragon World Pretty Chance (V101 09/26/01 10:23:26, Japan)</name>
+	<setname>dwpc101j</setname>
+	<rbf>PGM-027A-TYPE2</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff02">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|dwpc101j.zip|dwpc.zip|dw2001.zip">
+        <part>30 50</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20" crc="78c15fa2"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom" crc="1a7123a0"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom" crc="45ae7159"/>
+
+        <part>03 00080000 00100000</part>
+        <part name="dwpc_v101jp_u22.u22" crc="b93027c0"/>
+
+        <part>04 00400000 00180000</part>
+        <part name="dwpc_v100jp_u11.u11" crc="c29d8831"/>
+
+        <part>05 00200000 00200000</part>
+        <part name="dwpc_v100jp_u7.u7" crc="5cf9bada"/>
+
+        <part>06 00400000 00000000</part>
+        <part name="dwpc_v100jp_u2.u2" crc="e7115763"/>
+        <part name="dwpc_v100jp_u3.u3" crc="49c184a4"/>
+
+        <part>07 00200000 00000000</part>
+        <part name="dwpc_v100jp_u9.u9" crc="412b9913"/>
+
+        <part>08 00004000 00000000</part>
+        <part name="dw2001_igs027a_japan.bin" crc="3a79159b"/>
+
+        <part>09 00080000 00000000</part>
+        <part name="dwpc_v100jp_u12.u12" crc="0d112126"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+</misterromdescription>

@@ -1,0 +1,54 @@
+<misterromdescription>
+	<name>DoDonPachi Dai-Ou-Jou (Japan, 2002.04.05 Master Ver, location test)</name>
+	<setname>ddpdojp</setname>
+	<rbf>PGM</rbf>
+	<rotation>vertical</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="fffe">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|ddpdojp.zip|ddp3.zip">
+        <part>00 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgmbios.u20.27c210" crc="1d2a7c15"/>
+
+        <part>03 00400000 00100000</part>
+        <part name="ca008.cod_prom.u13.27c322" crc="2ba7fa3b"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom" crc="1a7123a0"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="fnt_cg.0_cgrom0.u8.27c322" crc="1805e198"/>
+        <part name="fnt_cg.1_cgrom1.u10.27c322" crc="f06ce99c"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom" crc="45ae7159"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="sndmask.rom_mcs1.u3.27c322" crc="5a0dbd76"/>
+
+        <part>06 01000000 00000000</part>
+        <part name="sp_cg.0_imcs0.u11.27c322" crc="c66bdd8e"/>
+        <part name="sp_cg.1_imcs1.u13.27c322" crc="d30eac89"/>
+        <part name="sp_cg.2_imcs2.u15.27c322" crc="f31b010e"/>
+        <part name="sp_cg.3_imcs3.u17.27c322" crc="01ec23f5"/>
+
+        <part>07 00800000 00000000</part>
+        <part name="sp_mp.0_bitcs0.u5.27c322" crc="e30494a4"/>
+        <part name="sp_mp.1_bitcs1.u6.27c322" crc="0239daec"/>
+
+        <part>0b 00020000 00000000</part>
+        <part name="ddp3_defaults.nv" crc="571e96c0"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+</misterromdescription>

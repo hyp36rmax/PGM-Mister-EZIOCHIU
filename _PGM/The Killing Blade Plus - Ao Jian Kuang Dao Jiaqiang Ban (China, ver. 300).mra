@@ -1,0 +1,94 @@
+<misterromdescription>
+	<name>The Killing Blade Plus / Ao Jian Kuang Dao Jiaqiang Ban (China, ver. 300)</name>
+	<setname>killbldp</setname>
+	<rbf>PGM-027A-TYPE3</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="fffe">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|killbldp.zip">
+		<part>40 70</part>
+
+		<part>00 00020000 00000000</part>
+		<part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+		<part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+		<part name="pgm_m01s.rom"/>
+
+        <part>03 00080000 00100000</part>
+        <part name="v300xx_u6.u6" crc="b7fb8ec9"/>
+
+        <part>04 00400000 00180000</part>
+        <part name="igs_t05701w032.u33" crc="567c714f"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="igs_w05701b032.u5" crc="2d3ae593"/>
+
+        <part>06 01800000 00000000</part>
+        <part name="igs_a05701w064.u3" crc="8c0c992c"/>
+        <part name="igs_a05702w064.u4" crc="7e5b0f27"/>
+        <part name="igs_a05703w064.u6" crc="accbdb44"/>
+
+        <part>07 00a00000 00000000</part>
+        <part name="igs_b05701w064.u9" crc="a20cdcef"/>
+        <part name="igs_b05702w016.u11" crc="fe7457df"/>
+
+        <part>08 00004000 00000000</part>
+        <part name="killbldp_igs027a_alt.bin" crc="98316b06"/>
+
+        <part>09 00200000 00000000</part>
+        <part name="v300xx_u26.u26" crc="144388c8"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="Infinite Credits">
+			000010101800c6bd0000000000000063
+		</cheat>
+		<cheat name="Infinite Time">
+			00001010180001e40000000000000063
+		</cheat>
+		<cheat name="Time Depleted">
+			00001010180001e40000000000000000
+		</cheat>
+		<cheat name="P1 Infinite Energy">
+			000010101800c87c0000000000000040
+			000010101800c87e0000000000000040
+		</cheat>
+		<cheat name="P1 Drain Energy">
+			000010101800c87c0000000000000000
+			000010101800c87e0000000000000000
+		</cheat>
+		<cheat name="P1 Infinite Red Attack Charge">
+			000010101800c8880000000000000078
+		</cheat>
+		<cheat name="P1 Infinite Blue Defense Charge">
+			000010101800c8900000000000000078
+		</cheat>
+		<cheat name="P2 Infinite Energy">
+			000010101800caa00000000000000040
+			000010101800caa20000000000000040
+		</cheat>
+		<cheat name="P2 Drain Energy">
+			000010101800caa00000000000000000
+			000010101800caa20000000000000000
+		</cheat>
+		<cheat name="P2 Infinite Red Attack Charge">
+			000010101800c8880000000000000078
+		</cheat>
+		<cheat name="P2 Infinite Blue Defense Charge">
+			000010101800c8900000000000000078
+		</cheat>
+	</cheats>
+</misterromdescription>

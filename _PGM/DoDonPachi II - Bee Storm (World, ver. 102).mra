@@ -1,0 +1,89 @@
+<misterromdescription>
+	<name>DoDonPachi II - Bee Storm (World, ver. 102)</name>
+	<setname>ddp2</setname>
+	<rbf>PGM-027A-TYPE2</rbf>
+	<rotation>vertical</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff05">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5" ids="China,Taiwan,Japan (Cave license),Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|ddp2.zip">
+        <part>30 40</part>
+
+        <part>00 00020000 00000000</part>
+		<part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+		<part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+		<part name="pgm_m01s.rom"/>
+
+        <part>03 00200000 00100000</part>
+        <part name="v102.u8" crc="5a9ea040"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="pgm_t1300.u21" crc="e748f0cb"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="pgm_m1300.u5" crc="82d4015d"/>
+
+        <part>06 01000000 00000000</part>
+        <part name="pgm_a1300.u1" crc="fc87a405"/>
+        <part name="pgm_a1301.u2" crc="0c8520da"/>
+
+        <part>07 00800000 00000000</part>
+        <part name="pgm_b1300.u7" crc="ef646604"/>
+
+        <part>08 00004000 00000000</part>
+        <part name="ddp2_igs027a_world.bin" crc="3654e20b"/>
+        
+        <part>09 00020000 00000000</part>
+        <part name="v100_210.u23" crc="06c3dd29"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="Infinite Credits">
+			000000100080eed60000000000000063
+		</cheat>
+		<cheat name="P1 Infinite Lives">
+			0000001000815a740000000000000003
+		</cheat>
+		<cheat name="P1 Invincible">
+			00000020008126000000000000000002
+		</cheat>
+		<cheat name="P1 Max Power">
+			000000100081260b0000000000000004
+		</cheat>
+		<cheat name="P1 Infinite Bombs (Bomb Type)">
+			00000010008159a60000000000000005
+		</cheat>
+		<cheat name="P1 Infinite Bombs (Energy Type)">
+			00000010008126070000000000000001
+		</cheat>
+		<cheat name="P2 Infinite Lives">
+			0000001000815a880000000000000003
+		</cheat>
+		<cheat name="P2 Invincible">
+			00000020008127920000000000000002
+		</cheat>
+		<cheat name="P2 Max Power">
+			000000100081279d0000000000000004
+		</cheat>
+		<cheat name="P2 Infinite Bombs (Bomb Type)">
+			00000010008159ae0000000000000005
+		</cheat>
+		<cheat name="P2 Infinite Bombs (Energy Type)">
+			00000010008127990000000000000001
+		</cheat>
+	</cheats>
+</misterromdescription>

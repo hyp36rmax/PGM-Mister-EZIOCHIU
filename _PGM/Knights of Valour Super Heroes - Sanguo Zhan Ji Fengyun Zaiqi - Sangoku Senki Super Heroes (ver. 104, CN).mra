@@ -1,0 +1,439 @@
+<misterromdescription>
+	<name>Knights of Valour Super Heroes / Sanguo Zhan Ji Fengyun Zaiqi / Sangoku Senki Super Heroes (ver. 104, CN)</name>
+	<setname>kovsh</setname>
+	<rbf>PGM-027A-TYPE1</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ffff">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5" ids="China,Taiwan,Japan (Alta license),Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|kovsh.zip">
+        <part>22 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00400000 00100000</part>
+        <part name="pgm_p0605_v104.u1" crc="7c78e5f3"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="pgm_t0600.u11" crc="4acc1ad6"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="pgm_m0600.u4" crc="3ada4fd6"/>
+
+        <part>06 01800000 00000000</part>
+        <part name="pgm_a0600.u1" crc="d8167834"/>
+        <part name="pgm_a0601.u3" crc="ff7a4373"/>
+        <part name="pgm_a0602.u5" crc="e7a32959"/>
+
+        <part>06 00400000 01800000</part>
+        <part name="pgm_a0613.u7" crc="ec31abda"/>
+
+        <part>06 00400000 01A00000</part>
+        <part name="pgm_a0604_v200.u9" crc="26b59fd3"/>
+
+        <part>07 00D00000 00000000</part>
+        <part name="pgm_b0600.u6" crc="7d3cd059"/>
+        <part name="pgm_b0601.u8" crc="a0bb1c2f"/>
+        <part name="pgm_b0602_v200.u10" crc="9df77934"/>
+
+        <part>08 00004000 00000000</part>
+        <part name="kovsh_v100_china.asic" crc="0f09a5c1"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="Infinite Time">
+			000000100081b21e0000000000000064
+		</cheat>
+		<cheat name="Assist Timer Lock">
+			0000002000811602000000000000ff04
+			00000010008131df000000000000003c
+		</cheat>
+		<cheat name="Score">
+			0000001000811b0800000000000000c9
+		</cheat>
+		<cheat name="Show Xu Chu">
+			0000001000803b870000000000000000
+		</cheat>
+		<cheat name="Enemies Do Not Attack">
+			000000100080dc5a0000000000000000
+		</cheat>
+		<cheat name="Enemies Freeze">
+			000000100080dc5b0000000000000000
+		</cheat>
+		<cheat name="Enemies Recover Quickly">
+			000000100080d0980000000000000008
+		</cheat>
+		<cheat name="Enemies Slow Motion">
+			000000100080dc560000000000000003
+		</cheat>
+		<cheat name="Super Infinite Combo (unlock after use)">
+			000000100080b2040000000000000000
+			000000100080b3aa0000000000000000
+			000000100080b5500000000000000000
+			000000100080b6f60000000000000000
+			000000100080b89c0000000000000000
+			000000100080ba420000000000000000
+			000000100080bbe80000000000000000
+			000000100080cf640000000000000002
+			000000100080d05e0000000000000000
+			000000100080d10a0000000000000002
+			000000100080d2b00000000000000002
+			000000100080d4560000000000000002
+			000000100080d5fc0000000000000002
+			000000100080d7a20000000000000002
+			000000100080d9480000000000000002
+			000000100080dafe0000000000000002
+		</cheat>
+		<cheat name="Cancel Combo Limit">
+			000000100080d0710000000000000000
+			000000100080d2170000000000000000
+			000000100080d3bd0000000000000000
+			000000100080d5630000000000000000
+			000000100080d7090000000000000000
+			000000100080d8af0000000000000000
+			000000100080da550000000000000000
+			000000100080dbfb0000000000000000
+		</cheat>
+		<cheat name="Rapid Hit">
+			000000100080d0710000000000000043
+			000000100080d2170000000000000043
+			000000100080d3bd0000000000000043
+			00000010008115dd000000000000000a
+			0000001000811929000000000000000a
+		</cheat>
+		<cheat name="Switch Timer">
+			000000100081160300000000000000ff
+			00000010008131df000000000000003c
+		</cheat>
+		<cheat name="Infinite Combo">
+			000000100080d0b70000000000000000
+			000000100080d25d0000000000000000
+			000000100080d4030000000000000000
+			000000100080d5a90000000000000000
+			000000100080d74f0000000000000000
+			000000100080d8f50000000000000000
+			000000100080da9b0000000000000000
+			000000100080dc410000000000000000
+		</cheat>
+		<cheat name="Infinite OTG Combo">
+			000000100080d0980000000000000000
+			000000100080d23e0000000000000000
+			000000100080d58a0000000000000000
+			000000100080d7300000000000000000
+			000000100080d8d60000000000000000
+			000000100080da7c0000000000000000
+			000000100080dc220000000000000000
+			000000100080ddc80000000000000000
+		</cheat>
+		<cheat name="Always Movable">
+			00000010008128e20000000000000001
+		</cheat>
+		<cheat name="P1+P3 Speed Up">
+			000000100081146b0000000000000000
+			00000010008117b70000000000000000
+		</cheat>
+		<cheat name="Lu Bu In Eagle Secret Room">
+			000000100081b4ba0000000000000001
+		</cheat>
+		<cheat name="Enter Diao Chan Secret Room">
+			000000200081b4680000000000000201
+		</cheat>
+		<cheat name="P1 Invincible">
+			00000020008115fa0000000000000004
+			000000200081153c000000000000000f
+		</cheat>
+		<cheat name="P1 High Attack Power">
+			00000010008115fb0000000000000002
+		</cheat>
+		<cheat name="P1 Infinite HP">
+			00000010008114c40000000000000080
+			0000001000811d3b0000000000000040
+		</cheat>
+		<cheat name="P1 Always Full Energy">
+			00000010008115a10000000000000002
+			0000001000812c0a0000000000000003
+		</cheat>
+		<cheat name="P1 Infinite Lives">
+			0000001000811b02000000000000000a
+		</cheat>
+		<cheat name="P1 Invisible">
+			00000010008115c200000000000000c8
+		</cheat>
+		<cheat name="P1 Always Enable 4A">
+			00000010008115f4000000000000001e
+		</cheat>
+		<cheat name="P1 Page 1 Item 1 Infinite">
+			000000100081294d0000000000000009
+		</cheat>
+		<cheat name="P1 Page 1 Item 2 Infinite">
+			000000100081294f0000000000000009
+		</cheat>
+		<cheat name="P1 Page 1 Item 3 Infinite">
+			00000010008129510000000000000009
+		</cheat>
+		<cheat name="P1 Page 1 Item 4 Infinite">
+			00000010008129530000000000000009
+		</cheat>
+		<cheat name="P1 Page 1 Item 5 Infinite">
+			00000010008129550000000000000009
+		</cheat>
+		<cheat name="P1 Page 1 Item 6 Infinite">
+			00000010008129570000000000000009
+		</cheat>
+		<cheat name="P1 Page 1 Item 7 Infinite">
+			00000010008129590000000000000009
+		</cheat>
+		<cheat name="P1 Page 1 Item 8 Infinite">
+			000000100081295b0000000000000009
+		</cheat>
+		<cheat name="P1 Page 2 Item 1 Infinite">
+			000000100081295f0000000000000009
+		</cheat>
+		<cheat name="P1 Page 2 Item 2 Infinite">
+			00000010008129610000000000000009
+		</cheat>
+		<cheat name="P1 Page 2 Item 3 Infinite">
+			00000010008129630000000000000009
+		</cheat>
+		<cheat name="P1 Page 2 Item 4 Infinite">
+			00000010008129650000000000000009
+		</cheat>
+		<cheat name="P1 Page 2 Item 5 Infinite">
+			00000010008129670000000000000009
+		</cheat>
+		<cheat name="P1 Page 2 Item 6 Infinite">
+			00000010008129690000000000000009
+		</cheat>
+		<cheat name="P1 Page 2 Item 7 Infinite">
+			000000100081296b0000000000000009
+		</cheat>
+		<cheat name="P1 Page 2 Item 8 Infinite">
+			000000100081296d0000000000000009
+		</cheat>
+		<cheat name="P2 Invincible">
+			00000010008117a10000000000000004
+			00000010008116e2000000000000000f
+		</cheat>
+		<cheat name="P2 High Attack Power">
+			00000010008117a10000000000000002
+		</cheat>
+		<cheat name="P2 Always Full HP">
+			000000100081166b0000000000000080
+			000000100081201900000000000000b0
+		</cheat>
+		<cheat name="P2 Always Full Energy">
+			00000010008117470000000000000003
+			0000001000812c560000000000000003
+		</cheat>
+		<cheat name="P2 Infinite Lives">
+			0000001000811de0000000000000000a
+		</cheat>
+		<cheat name="P2 Invisible">
+			000000100081176800000000000000c8
+		</cheat>
+		<cheat name="P2 Page 1 Item 1 Infinite">
+			00000010008129e50000000000000009
+		</cheat>
+		<cheat name="P2 Page 1 Item 2 Infinite">
+			00000010008129e70000000000000009
+		</cheat>
+		<cheat name="P2 Page 1 Item 3 Infinite">
+			00000010008129e90000000000000009
+		</cheat>
+		<cheat name="P2 Page 1 Item 4 Infinite">
+			00000010008129eb0000000000000009
+		</cheat>
+		<cheat name="P2 Page 1 Item 5 Infinite">
+			00000010008129ed0000000000000009
+		</cheat>
+		<cheat name="P2 Page 1 Item 6 Infinite">
+			00000010008129ef0000000000000009
+		</cheat>
+		<cheat name="P2 Page 1 Item 7 Infinite">
+			00000010008129f10000000000000009
+		</cheat>
+		<cheat name="P2 Page 1 Item 8 Infinite">
+			00000010008129f30000000000000009
+		</cheat>
+		<cheat name="P2 Page 2 Item 1 Infinite">
+			00000010008129f70000000000000009
+		</cheat>
+		<cheat name="P2 Page 2 Item 2 Infinite">
+			00000010008129f90000000000000009
+		</cheat>
+		<cheat name="P2 Page 2 Item 3 Infinite">
+			00000010008129fb0000000000000009
+		</cheat>
+		<cheat name="P2 Page 2 Item 4 Infinite">
+			00000010008129fd0000000000000009
+		</cheat>
+		<cheat name="P2 Page 2 Item 5 Infinite">
+			00000010008129ff0000000000000009
+		</cheat>
+		<cheat name="P2 Page 2 Item 6 Infinite">
+			0000001000812a010000000000000009
+		</cheat>
+		<cheat name="P2 Page 2 Item 7 Infinite">
+			0000001000812a030000000000000009
+		</cheat>
+		<cheat name="P2 Page 2 Item 8 Infinite">
+			0000001000812a050000000000000009
+		</cheat>
+		<cheat name="P3 Invincible">
+			00000010008119470000000000000004
+		</cheat>
+		<cheat name="P3 High Attack Power">
+			00000010008119470000000000000002
+		</cheat>
+		<cheat name="P3 Always Full HP">
+			00000010008118110000000000000080
+			00000010008122f70000000000000040
+		</cheat>
+		<cheat name="P3 Always Full Energy">
+			00000010008118ed0000000000000003
+			0000001000812ca20000000000000003
+		</cheat>
+		<cheat name="P3 Infinite Lives">
+			00000010008120bf00000000000000e0
+		</cheat>
+		<cheat name="P3 Invisible">
+			000000100081190e00000000000000c8
+		</cheat>
+		<cheat name="P3 Page 1 Item 1 Infinite">
+			0000001000812a7d0000000000000009
+		</cheat>
+		<cheat name="P3 Page 1 Item 2 Infinite">
+			0000001000812a7f0000000000000009
+		</cheat>
+		<cheat name="P3 Page 1 Item 3 Infinite">
+			0000001000812a810000000000000009
+		</cheat>
+		<cheat name="P3 Page 1 Item 4 Infinite">
+			0000001000812a830000000000000009
+		</cheat>
+		<cheat name="P3 Page 1 Item 5 Infinite">
+			0000001000812a850000000000000009
+		</cheat>
+		<cheat name="P3 Page 1 Item 6 Infinite">
+			0000001000812a870000000000000009
+		</cheat>
+		<cheat name="P3 Page 1 Item 7 Infinite">
+			0000001000812a890000000000000009
+		</cheat>
+		<cheat name="P3 Page 1 Item 8 Infinite">
+			0000001000812a8b0000000000000009
+		</cheat>
+		<cheat name="P3 Page 2 Item 1 Infinite">
+			0000001000812a8f0000000000000009
+		</cheat>
+		<cheat name="P3 Page 2 Item 2 Infinite">
+			0000001000812a910000000000000009
+		</cheat>
+		<cheat name="P3 Page 2 Item 3 Infinite">
+			0000001000812a930000000000000009
+		</cheat>
+		<cheat name="P3 Page 2 Item 4 Infinite">
+			0000001000812a950000000000000009
+		</cheat>
+		<cheat name="P3 Page 2 Item 5 Infinite">
+			0000001000812a970000000000000009
+		</cheat>
+		<cheat name="P3 Page 2 Item 6 Infinite">
+			0000001000812a990000000000000009
+		</cheat>
+		<cheat name="P3 Page 2 Item 7 Infinite">
+			0000001000812a9b0000000000000009
+		</cheat>
+		<cheat name="P3 Page 2 Item 8 Infinite">
+			0000001000812a9d0000000000000009
+		</cheat>
+		<cheat name="P4 Invincible">
+			0000001000811aed0000000000000004
+		</cheat>
+		<cheat name="P4 High Attack Power">
+			0000002000811a920000000000000003
+		</cheat>
+		<cheat name="P4 Always Full HP">
+			00000010008119b70000000000000080
+			00000010008125d50000000000000040
+		</cheat>
+		<cheat name="P4 Always Full Energy">
+			0000001000811a930000000000000003
+			0000001000812cee0000000000000003
+		</cheat>
+		<cheat name="P4 Lives">
+			000000100081239d00000000000000e0
+		</cheat>
+		<cheat name="P4 Invisible">
+			0000001000811ab400000000000000c8
+		</cheat>
+		<cheat name="P4 Page 1 Item 1 Infinite">
+			0000001000812b150000000000000009
+		</cheat>
+		<cheat name="P4 Page 1 Item 2 Infinite">
+			0000001000812b170000000000000009
+		</cheat>
+		<cheat name="P4 Page 1 Item 3 Infinite">
+			0000001000812b190000000000000009
+		</cheat>
+		<cheat name="P4 Page 1 Item 4 Infinite">
+			0000001000812b1b0000000000000009
+		</cheat>
+		<cheat name="P4 Page 1 Item 5 Infinite">
+			0000001000812b1d0000000000000009
+		</cheat>
+		<cheat name="P4 Page 1 Item 6 Infinite">
+			0000001000812b1f0000000000000009
+		</cheat>
+		<cheat name="P4 Page 1 Item 7 Infinite">
+			0000001000812b210000000000000009
+		</cheat>
+		<cheat name="P4 Page 1 Item 8 Infinite">
+			0000001000812b230000000000000009
+		</cheat>
+		<cheat name="P4 Page 2 Item 1 Infinite">
+			0000001000812b270000000000000009
+		</cheat>
+		<cheat name="P4 Page 2 Item 2 Infinite">
+			0000001000812b290000000000000009
+		</cheat>
+		<cheat name="P4 Page 2 Item 3 Infinite">
+			0000001000812b2b0000000000000009
+		</cheat>
+		<cheat name="P4 Page 2 Item 4 Infinite">
+			0000001000812b2d0000000000000009
+		</cheat>
+		<cheat name="P4 Page 2 Item 5 Infinite">
+			0000001000812b2f0000000000000009
+		</cheat>
+		<cheat name="P4 Page 2 Item 6 Infinite">
+			0000001000812b310000000000000009
+		</cheat>
+		<cheat name="P4 Page 2 Item 7 Infinite">
+			0000001000812b330000000000000009
+		</cheat>
+		<cheat name="P4 Page 2 Item 8 Infinite">
+			0000001000812b350000000000000009
+		</cheat>
+		<cheat name="Game Mode (HCAK Beta1 only)">
+			0000001000803b630000000000000000
+		</cheat>
+	</cheats>
+</misterromdescription>

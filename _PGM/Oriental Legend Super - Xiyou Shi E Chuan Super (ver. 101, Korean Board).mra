@@ -1,0 +1,228 @@
+<misterromdescription>
+	<name>Oriental Legend Super / Xiyou Shi E Chuan Super (ver. 101, Korean Board)</name>
+	<setname>olds</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff06">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="1,2,3,4,5,6" ids="Taiwan,China,Japan,Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|olds.zip">
+        <part>60 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00280000 00100000</part>
+        <interleave output="16">
+        <part name="sp_v101_u2.u2" crc="08eb9661" map="01"/>
+        <part name="sp_v101_u3.u3" crc="0a358c1e" map="10"/>
+        </interleave>
+        <interleave output="16">
+        <part name="sp_v101_u4.u4" crc="766570e0" map="01"/>
+        <part name="sp_v101_u5.u5" crc="58662e12" map="10"/>
+        </interleave>
+        <part name="sp_v101_u1.u1" crc="2b2f4f1e"/>
+
+        <part>04 00600000 00180000</part>
+        <part name="pgm_t0500.u18" crc="d881726c"/>
+        <part name="pgm_t0501.u19" crc="d2106864"/>
+
+        <part>05 00200000 00400000</part>
+        <part name="pgm_m0500.u1" crc="37928cdd"/>
+
+        <part>06 01C00000 00000000</part>
+        <part name="pgm_a0500.u5" crc="80a59197"/>
+        <part name="pgm_a0501.u6" crc="98c931b1"/>
+        <part name="pgm_a0502.u7" crc="c3fcdf1d"/>
+        <part name="pgm_a0503.u8" crc="066dffec"/>
+        <part name="pgm_a0504.u11" crc="45337583"/>
+        <part name="pgm_a0505.u12" crc="5b8cf3a5"/>
+        <part name="pgm_a0506.u13" crc="087ac60c"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="pgm_b0500.u9" crc="cde07f74"/>
+        <part name="pgm_b0501.u10" crc="1546c2e9"/>
+        <part name="pgm_b0502.u15" crc="e97b31c3"/>
+        <part name="pgm_b0503.u16" crc="e41d98e4"/>
+
+        <part>0D 00010000 00000000</part>
+        <part name="sp_v101_u6.u6" crc="097046bc"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="Stage Select 1">
+			00004010004028230000000000000000
+			0000401000402acb0000000000000000
+		</cheat>
+		<cheat name="Stage Select 2">
+			00004010004028230000000000000001
+			0000401000402acb0000000000000001
+		</cheat>
+		<cheat name="Stage Select 3">
+			00004010004028230000000000000003
+			0000401000402acb0000000000000002
+		</cheat>
+		<cheat name="Stage Select 4">
+			00004010004028230000000000000002
+			0000401000402acb0000000000000003
+		</cheat>
+		<cheat name="Stage Select 5">
+			00004010004028230000000000000004
+			0000401000402acb0000000000000004
+		</cheat>
+		<cheat name="Stage Select 6">
+			00004010004028230000000000000005
+			0000401000402acb0000000000000005
+		</cheat>
+		<cheat name="Stage Select 7">
+			00004010004028230000000000000006
+			0000401000402acb0000000000000006
+		</cheat>
+		<cheat name="Stage Select 8">
+			00004010004028230000000000000007
+			0000401000402acb0000000000000007
+		</cheat>
+		<cheat name="Scene Select 1">
+			000000100080ce200000000000000000
+		</cheat>
+		<cheat name="Scene Select 2">
+			000000100080ce200000000000000001
+		</cheat>
+		<cheat name="Scene Select 3">
+			000000100080ce200000000000000002
+		</cheat>
+		<cheat name="Scene Select 4">
+			000000100080ce200000000000000003
+		</cheat>
+		<cheat name="Scene Select 5">
+			000000100080ce200000000000000004
+		</cheat>
+		<cheat name="Scene Select 6">
+			000000100080ce200000000000000005
+		</cheat>
+		<cheat name="Scene Select 7">
+			000000100080ce200000000000000006
+		</cheat>
+		<cheat name="Scene Select 8">
+			000000100080ce200000000000000007
+		</cheat>
+		<cheat name="Scene Select 9">
+			000000100080ce200000000000000008
+		</cheat>
+		<cheat name="Infinite Time">
+			000000100080ce520000000000000064
+		</cheat>
+		<cheat name="P1 Infinite Lives">
+			000000100081792e000000000000000a
+		</cheat>
+		<cheat name="P1 Infinite HP">
+			00000010008171ea0000000000000064
+			0000001000817b3000000000000000ee
+		</cheat>
+		<cheat name="P2 Infinite Lives">
+			0000001000817bb4000000000000000a
+		</cheat>
+		<cheat name="P2 Infinite HP">
+			000000100081735a0000000000000064
+			0000001000817db600000000000000ee
+		</cheat>
+		<cheat name="P3 Infinite Lives">
+			0000001000817e3a000000000000000a
+		</cheat>
+		<cheat name="P3 Infinite HP">
+			00000010008174ca0000000000000064
+			000000100081803c00000000000000ee
+		</cheat>
+		<cheat name="P4 Infinite Lives">
+			00000010008180c0000000000000000a
+		</cheat>
+		<cheat name="P4 Infinite HP">
+			000000100081763a0000000000000064
+			00000010008182c200000000000000ee
+		</cheat>
+		<cheat name="Fix Invincible Soldiers">
+			00000010008178c40000000000000000
+			00000010008178c50000000000000000
+		</cheat>
+		<cheat name="P1 Max Energy Level">
+			0000001000816ab40000000000000003
+		</cheat>
+		<cheat name="P1 8 Item Slots">
+			000000100081219a0000000000000008
+		</cheat>
+		<cheat name="P1 Infinite Items">
+			00000010008121890000000000000005
+			000000100081218b0000000000000003
+			000000100081218d0000000000000003
+			000000100081218f0000000000000003
+			00000010008121910000000000000003
+			00000010008121930000000000000003
+			00000010008121950000000000000003
+			00000010008121970000000000000003
+		</cheat>
+		<cheat name="P2 Max Energy Level">
+			0000001000816ab50000000000000003
+		</cheat>
+		<cheat name="P2 8 Item Slots">
+			00000010008122180000000000000008
+		</cheat>
+		<cheat name="P2 Infinite Items">
+			00000010008122070000000000000005
+			00000010008122090000000000000003
+			000000100081220b0000000000000003
+			000000100081220d0000000000000003
+			000000100081220f0000000000000003
+			00000010008123010000000000000003
+			00000010008123030000000000000003
+			00000010008123050000000000000003
+		</cheat>
+		<cheat name="P3 Max Energy Level">
+			0000001000816ab60000000000000003
+		</cheat>
+		<cheat name="P3 8 Item Slots">
+			00000010008122960000000000000008
+		</cheat>
+		<cheat name="P3 Infinite Items">
+			00000010008122850000000000000005
+			00000010008122870000000000000003
+			00000010008122890000000000000003
+			000000100081228b0000000000000003
+			000000100081228d0000000000000003
+			000000100081228f0000000000000003
+			00000010008122910000000000000003
+			00000010008122930000000000000003
+		</cheat>
+		<cheat name="P4 Max Energy Level">
+			0000001000816ab70000000000000003
+		</cheat>
+		<cheat name="P4 8 Item Slots">
+			00000010008123140000000000000008
+		</cheat>
+		<cheat name="P4 Infinite Items">
+			00000010008123030000000000000005
+			00000010008123050000000000000003
+			00000010008123070000000000000003
+			00000010008123090000000000000003
+			000000100081230b0000000000000003
+			000000100081230d0000000000000003
+			000000100081230f0000000000000003
+			00000010008123110000000000000003
+		</cheat>
+	</cheats>
+</misterromdescription>

@@ -1,0 +1,103 @@
+<misterromdescription>
+	<name>Knights of Valour Super Heroes / Sanguo Zhan Ji Fengyun Zaiqi / Sangoku Senki Super Heroes (SANGO EX+) (ver. 201 'Yitong Zhongyuan', China)</name>
+	<setname>kovytzy</setname>
+	<rbf>PGM-027A-TYPE1</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ffff">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5" ids="China,Taiwan,Japan (Alta license),Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|kovytzy.zip">
+        <part>24 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00400000 00100000</part>
+        <part name="ytzy_v201cn.rom" crc="f3705ea0"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="pgm_t0600.u2" crc="4acc1ad6"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="pgm_m0600.u5" crc="3ada4fd6"/>
+
+        <part>06 02000000 00000000</part>
+        <part name="pgm_a0600.u3" crc="d8167834"/>
+        <part name="pgm_a0601.u4" crc="ff7a4373"/>
+        <part name="pgm_a0602.u6" crc="e7a32959"/>
+        <part name="igs_a05401w064.u8" crc="4fd3413e"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="pgm_b0600.u9" crc="7d3cd059"/>
+        <part name="igs_b05401w064.u11" crc="60999757"/>
+
+        <part>08 00004000 00000000</part>
+        <part name="kovshp_v100_china.asic" crc="106820a0"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="Rescue Adou - Skip Boat Ride">
+			000000210081b3850000000000000001
+		</cheat>
+		<cheat name="Invincible + Four Sword Attack Up">
+			00000010008116890000000000000006
+			000000100081183f0000000000000006
+			00000010008119f50000000000000006
+			0000001000811bab0000000000000006
+		</cheat>
+		<cheat name="Infinite Energy">
+			0000001000812d300000000000000003
+			0000001000812d7c0000000000000003
+			0000001000812dc80000000000000003
+			0000001000812e140000000000000003
+			000000100081162f0000000000000003
+			00000010008117e50000000000000003
+			000000100081199b0000000000000003
+			0000001000811b510000000000000003
+			000000100081162e000000000000004f
+			00000010008117e4000000000000004f
+			000000100081199a000000000000004f
+			0000001000811b50000000000000004f
+		</cheat>
+		<cheat name="Books Never Disappear">
+			0000001000812cba00000000000000ff
+			0000001000812cbb00000000000000ff
+			0000001000812cbc00000000000000ff
+			0000001000812cbd00000000000000ff
+		</cheat>
+		<cheat name="A Button Rapid Fire">
+			00000010008062db0000000000000001
+			000000100080630b0000000000000001
+			000000100080633b0000000000000001
+			000000100080636b0000000000000001
+		</cheat>
+		<cheat name="Freeze">
+			000000100080dcd90000000000000000
+		</cheat>
+		<cheat name="No Attack">
+			000000100080dcda0000000000000000
+		</cheat>
+		<cheat name="Cannot Move">
+			000000100080dcdb0000000000000000
+		</cheat>
+		<cheat name="Slow Motion">
+			000000100080dcd600000000000000ff
+		</cheat>
+	</cheats>
+</misterromdescription>

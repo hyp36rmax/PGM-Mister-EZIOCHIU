@@ -1,0 +1,161 @@
+<misterromdescription>
+	<name>Knights of Valour Plus / Sanguo Zhan Ji Zhengzong Plus / Sangoku Senki Masamune Plus (ver. 119, set 1)</name>
+	<setname>kovplus</setname>
+	<rbf>PGM</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff00">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5" ids="China,Taiwan,Japan (Alta license),Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|kovplus.zip|kov.zip">
+        <part>11 00</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00400000 00100000</part>
+        <part name="pgm_p0603_v119.u1" crc="e4b0875d"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="pgm_t0600.u11" crc="4acc1ad6"/>
+
+        <part>05 00400000 00400000</part>
+        <part name="pgm_m0600.u3" crc="3ada4fd6"/>
+
+        <part>06 01C00000 00000000</part>
+        <part name="pgm_a0600.u2" crc="d8167834"/>
+        <part name="pgm_a0601.u4" crc="ff7a4373"/>
+        <part name="pgm_a0602.u6" crc="e7a32959"/>
+        <part name="pgm_a0603.u9" crc="ec31abda"/>
+
+        <part>07 00C00000 00000000</part>
+        <part name="pgm_b0600.u5" crc="7d3cd059"/>
+        <part name="pgm_b0601.u7" crc="a0bb1c2f"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="Rescue Adou - Skip Boat Ride">
+			000000210081b0f20000000000000001
+		</cheat>
+		<cheat name="Jingzhou - Diao Chan Door Opens Directly">
+			000000200081b36e0000000000000201
+		</cheat>
+		<cheat name="Eight Formation - Lu Bu Always Appears">
+			000000100081b3490000000000000005
+		</cheat>
+		<cheat name="Character Invincible">
+			000000100081158f0000000000000004
+			000000100081172b0000000000000004
+			00000010008118c70000000000000004
+			0000001000811a630000000000000004
+		</cheat>
+		<cheat name="Infinite Energy">
+			00000010008115350000000000000003
+			00000010008116d10000000000000003
+			000000100081186d0000000000000003
+			0000001000811a090000000000000003
+			0000001000812b020000000000000003
+			0000001000812b4e0000000000000003
+			0000001000812b9a0000000000000003
+			0000001000812be60000000000000003
+			0000001000811534000000000000004f
+			00000010008116d0000000000000004f
+			000000100081186c000000000000004f
+			0000001000811a08000000000000004f
+		</cheat>
+		<cheat name="Books Never Disappear">
+			0000001000812a8e0000000000000001
+			0000001000812a8f0000000000000001
+			0000001000812a900000000000000001
+			0000001000812a910000000000000001
+		</cheat>
+		<cheat name="A Button Rapid Fire">
+			00000010008062db0000000000000001
+			000000100080630b0000000000000001
+			000000100080633b0000000000000001
+			000000100080636b0000000000000001
+		</cheat>
+		<cheat name="Rapid Hit">
+			00000010008115710000000000000001
+		</cheat>
+		<cheat name="Freeze">
+			000000100080dc050000000000000000
+		</cheat>
+		<cheat name="No Attack">
+			000000100080dc060000000000000000
+		</cheat>
+		<cheat name="Cannot Move">
+			000000100080dc070000000000000000
+		</cheat>
+		<cheat name="Slow Motion">
+			000000100080dc0200000000000000ff
+		</cheat>
+		<cheat name="Full-screen Attack">
+			000030200011a1440000000000004e71
+			000030200011a1460000000000004e71
+			000030200011a1160000000000006008
+			000030200011c4f00000000000004e71
+			000030200011c4f20000000000004e71
+			000030200011c4be0000000000006008
+		</cheat>
+		<cheat name="Attack x2">
+			000030200010ec2c0000000000004eb9
+			000030200010ec2e000000000000001b
+			000030200010ec300000000000006e00
+			00003020001b6e000000000000007000
+			00003020001b6e02000000000000302b
+			00003020001b6e04000000000000005e
+			00003020001b6e06000000000000c4fc
+			00003020001b6e080000000000000002
+			00003020001b6e0a0000000000004e75
+		</cheat>
+		<cheat name="Attack x5">
+			000030200010ec2c0000000000004eb9
+			000030200010ec2e000000000000001b
+			000030200010ec300000000000006e00
+			00003020001b6e000000000000007000
+			00003020001b6e02000000000000302b
+			00003020001b6e04000000000000005e
+			00003020001b6e06000000000000c4fc
+			00003020001b6e080000000000000005
+			00003020001b6e0a0000000000004e75
+		</cheat>
+		<cheat name="Attack x10">
+			000030200010ec2c0000000000004eb9
+			000030200010ec2e000000000000001b
+			000030200010ec300000000000006e00
+			00003020001b6e000000000000007000
+			00003020001b6e02000000000000302b
+			00003020001b6e04000000000000005e
+			00003020001b6e06000000000000c4fc
+			00003020001b6e08000000000000000a
+			00003020001b6e0a0000000000004e75
+		</cheat>
+		<cheat name="Attack x100">
+			000030200010ec2c0000000000004eb9
+			000030200010ec2e000000000000001b
+			000030200010ec300000000000006e00
+			00003020001b6e000000000000007000
+			00003020001b6e02000000000000302b
+			00003020001b6e04000000000000005e
+			00003020001b6e06000000000000c4fc
+			00003020001b6e080000000000000064
+			00003020001b6e0a0000000000004e75
+		</cheat>
+	</cheats>
+</misterromdescription>

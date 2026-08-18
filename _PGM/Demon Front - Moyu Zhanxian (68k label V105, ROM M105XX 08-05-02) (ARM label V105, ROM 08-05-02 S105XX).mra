@@ -1,0 +1,97 @@
+<misterromdescription>
+	<name>Demon Front / Moyu Zhanxian (68k label V105, ROM M105XX 08/05/02) (ARM label V105, ROM 08/05/02 S105XX)</name>
+	<setname>dmnfrnt</setname>
+	<rbf>PGM-027A-TYPE3</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ff05">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5" ids="China,Taiwan,Japan,Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|dmnfrnt.zip">
+        <part>40 61</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00200000 00100000</part>
+        <part name="v105_16m.u5" crc="bda083bd"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="igs_t04501w064.u29" crc="900eaaac"/>
+
+        <part>05 00800000 00400000</part>
+        <part name="igs_w04501b064.u5" crc="3ab58137"/>
+
+        <part>06 01800000 00000000</part>
+        <part name="igs_a04501w064.u3" crc="9741bea6"/>
+        <part name="igs_a04502w064.u4" crc="e104f405"/>
+        <part name="igs_a04503w064.u6" crc="bfd5cfe3"/>
+
+        <part>07 00A00000 00000000</part>
+        <part name="igs_b04501w064.u9" crc="29320b7d"/>
+        <part name="igs_b04502w016.u11" crc="578c00e9"/>
+
+        <part>09 00400000 00000000</part>
+        <part name="v105_32m.u26" crc="c798c2ef"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="P1 Infinite Lives">
+			0000101018012be80000000000000003
+		</cheat>
+		<cheat name="P1 Character Invincible">
+			0000101018012bc800000000000000b4
+		</cheat>
+		<cheat name="P1 Pet Invincibility Time">
+			0000101018012bc800000000000000b4
+		</cheat>
+		<cheat name="P1 Infinite Ammo">
+			0000101018012bdc00000000000000c8
+			0000101018012bdd0000000000000000
+		</cheat>
+		<cheat name="P1 Pet Max Level">
+			0000101018012ba40000000000000060
+			0000101018012ba50000000000000003
+		</cheat>
+		<cheat name="P1 Gun Max Level">
+			0000101018012ba80000000000000010
+			0000101018012ba90000000000000002
+		</cheat>
+		<cheat name="P2 Infinite Lives">
+			0000101018012c680000000000000003
+		</cheat>
+		<cheat name="P2 Character Invincible">
+			0000101018012c4800000000000000b4
+		</cheat>
+		<cheat name="P2 Pet Invincibility Time">
+			0000101018012c4800000000000000b4
+		</cheat>
+		<cheat name="P2 Infinite Ammo">
+			0000101018012c5c00000000000000c8
+			0000101018012c5d0000000000000000
+		</cheat>
+		<cheat name="P2 Pet Max Level">
+			0000101018012c240000000000000060
+			0000101018012c250000000000000003
+		</cheat>
+		<cheat name="P2 Gun Max Level">
+			0000101018012c280000000000000010
+			0000101018012c290000000000000002
+		</cheat>
+	</cheats>
+</misterromdescription>

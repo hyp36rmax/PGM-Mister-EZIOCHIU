@@ -1,0 +1,333 @@
+<misterromdescription>
+	<name>Knights of Valour 2 / Sanguo Zhan Ji 2 / Sangoku Senki 2 (ver. 107, 102, 100HK)</name>
+	<setname>kov2</setname>
+	<rbf>PGM-027A-TYPE2</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ffff">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5" ids="China,Taiwan,Japan (Alta license),Korea,Hong Kong,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|kov2.zip">
+        <part>30 10</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="pgm_p02s.u20"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00400000 00100000</part>
+        <part name="v107_u18.u18" crc="661a5b2c"/>
+
+        <part>04 00800000 00180000</part>
+        <part name="pgm_t1200.u27" crc="d7e26609"/>
+
+        <part>05 00800000 00800000</part>
+        <part name="pgm_m1200.u3" crc="b0d88720"/>
+
+        <part>06 02200000 00000000</part>
+        <part name="pgm_a1200.u1" crc="ceeb81d8"/>
+        <part name="pgm_a1201.u4" crc="21063ca7"/>
+        <part name="pgm_a1202.u6" crc="4bb92fae"/>
+        <part name="pgm_a1203.u8" crc="e73cb627"/>
+        <part name="pgm_a1204.u10" crc="14b4b5bb"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="pgm_b1200.u5" crc="bed7d994"/>
+        <part name="pgm_b1201.u7" crc="f251eb57"/>
+
+        <part>08 00004000 00000000</part>
+        <part name="kov2_v100_hongkong.asic" crc="e0d7679f"/>
+
+        <part>09 00200000 00000000</part>
+        <part name="v102_u19.u19" crc="462e2980"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+	<cheats size="16" max="64">
+		<cheat name="Infinite Time">
+			00000010008183440000000000000063
+		</cheat>
+		<cheat name="Soldiers Flee Immediately">
+			0000001000803df60000000000000000
+		</cheat>
+		<cheat name="Complete Mission">
+			00000010008183630000000000000001
+			00000010008183690000000000000001
+			000000100081836f0000000000000001
+			00000010008183730000000000000001
+			00000010008183750000000000000001
+			00000010008183770000000000000001
+			00000010008183790000000000000001
+			000000100081837b0000000000000001
+			000000100081837d0000000000000001
+			00000010008183830000000000000001
+			00000010008183870000000000000001
+		</cheat>
+		<cheat name="Enter White Rabbit Secret Room (enable before door)">
+			000000100081b1a10000000000000001
+		</cheat>
+		<cheat name="Enemy 1 Infinite HP">
+			000000200080c9a0000000000000033f
+		</cheat>
+		<cheat name="Challenge Four Kings">
+			000000200081b9510000000000000000
+			000000200081b9bd0000000000000000
+			000000200081c7090000000000000000
+			000000200081c70b0000000000000000
+		</cheat>
+		<cheat name="Unlock Artifacts + Strategy">
+			000000100080cc260000000000000002
+			000000100080cc2a0000000000000002
+			000000100080cc2e0000000000000002
+			000000100080cc320000000000000002
+			000000100080cc360000000000000002
+			000000100080cc3a0000000000000002
+			000000100080cc3e0000000000000002
+			000000100080cc430000000000000002
+			000000100080d00d0000000000000000
+			000000100080d00f0000000000000000
+			000000100080d0110000000000000000
+			000000100080d0130000000000000000
+			000000100080d0150000000000000000
+			000000100080d03f0000000000000000
+			000000100080d0530000000000000000
+			000000100080d0550000000000000000
+			000000100080d0590000000000000000
+			000000100080d05b0000000000000000
+			000000100080d05d0000000000000000
+			000000100080d0610000000000000000
+			000000100080d0630000000000000000
+			000000100080d0650000000000000000
+			000000100080d0670000000000000000
+			000000100080d0690000000000000000
+			000000100080d06b0000000000000000
+			000000100080d06d0000000000000000
+			000000100080d0f10000000000000000
+		</cheat>
+		<cheat name="Strategy Chain">
+			000000100080d03f0000000000000000
+		</cheat>
+		<cheat name="Soldiers Berserk">
+			000000100080c2ac0000000000000003
+			000000100080c2ad0000000000000098
+			000000100080c2ae0000000000000003
+			000000100080c2af0000000000000098
+		</cheat>
+		<cheat name="Soldiers Do Not Attack">
+			000000100080c2ac0000000000000000
+			000000100080c2ad0000000000000000
+			000000100080c2ae0000000000000000
+			000000100080c2af0000000000000000
+		</cheat>
+		<cheat name="Free Walk">
+			000000100081983a000000000000000a
+		</cheat>
+		<cheat name="NPC Invulnerable">
+			000000100080c2b60000000000000000
+			000000100080c2b70000000000000000
+		</cheat>
+		<cheat name="P1 Infinite Lives">
+			00000010008186cb0000000000000009
+		</cheat>
+		<cheat name="P1 Infinite Stamina">
+			00000010008189090000000000000040
+		</cheat>
+		<cheat name="P1 Max Morale">
+			000000100081a6140000000000000048
+			000000100081a6190000000000000030
+		</cheat>
+		<cheat name="P1 Max Level">
+			00000010008189af0000000000000063
+		</cheat>
+		<cheat name="P1 Infinite Switch Timer">
+			000000100081a43f0000000000000050
+		</cheat>
+		<cheat name="P1 Max Score">
+			00000040008186d000000000ffffffff
+		</cheat>
+		<cheat name="P1 Max EXP">
+			00000040008189a600000000ffffffff
+		</cheat>
+		<cheat name="P2 Infinite Lives">
+			0000001000818ad10000000000000009
+		</cheat>
+		<cheat name="P2 Infinite Stamina">
+			0000001000818d0f0000000000000040
+		</cheat>
+		<cheat name="P2 Max Morale">
+			000000100081a6900000000000000048
+			000000100081a6950000000000000030
+		</cheat>
+		<cheat name="P2 Max Level">
+			0000001000818db50000000000000063
+		</cheat>
+		<cheat name="P2 Infinite Switch Timer">
+			000000100081a4bf0000000000000050
+		</cheat>
+		<cheat name="P2 Max Score">
+			0000004000818ad600000000ffffffff
+		</cheat>
+		<cheat name="P2 Max EXP">
+			0000004000818dac00000000ffffffff
+		</cheat>
+		<cheat name="P3 Infinite Lives">
+			0000001000818ed70000000000000009
+		</cheat>
+		<cheat name="P3 Infinite Stamina">
+			00000010008191150000000000000040
+		</cheat>
+		<cheat name="P3 Max Morale">
+			000000100081a7100000000000000048
+			000000100081a7150000000000000030
+		</cheat>
+		<cheat name="P3 Max Level">
+			00000010008191bb0000000000000063
+		</cheat>
+		<cheat name="P3 Infinite Switch Timer">
+			000000100081a53f0000000000000050
+		</cheat>
+		<cheat name="P3 Max Score">
+			0000004000818edc00000000ffffffff
+		</cheat>
+		<cheat name="P3 Max EXP">
+			00000040008191b200000000ffffffff
+		</cheat>
+		<cheat name="P4 Infinite Lives">
+			00000010008192dd0000000000000009
+		</cheat>
+		<cheat name="P4 Infinite Stamina">
+			000000100081951b0000000000000040
+		</cheat>
+		<cheat name="P4 Max Morale">
+			000000100081a7900000000000000048
+			000000100081a7950000000000000030
+		</cheat>
+		<cheat name="P4 Max Level">
+			00000010008195c10000000000000063
+		</cheat>
+		<cheat name="P4 Infinite Switch Timer">
+			000000100081a5bf0000000000000050
+		</cheat>
+		<cheat name="P4 Max Score">
+			00000040008192e200000000ffffffff
+		</cheat>
+		<cheat name="P4 Max EXP">
+			00000040008195b800000000ffffffff
+		</cheat>
+		<cheat name="P1 Page B Has 4 Equipment">
+			000000100080cc870000000000000004
+		</cheat>
+		<cheat name="P1 Page A Infinite Items">
+			000000100080cc280000000000000009
+			000000100080cc2c0000000000000009
+			000000100080cc300000000000000009
+			000000100080cc340000000000000009
+			000000100080cc380000000000000009
+			000000100080cc3c0000000000000009
+			000000100080cc400000000000000009
+			000000100080cc440000000000000009
+		</cheat>
+		<cheat name="P1 Page B Infinite Items">
+			000000100080cc480000000000000009
+			000000100080cc4c0000000000000009
+			000000100080cc500000000000000009
+			000000100080cc540000000000000009
+		</cheat>
+		<cheat name="P2 Page B Has 4 Equipment">
+			000000100080cd830000000000000004
+		</cheat>
+		<cheat name="P2 Page A Infinite Items">
+			000000100080cd240000000000000009
+			000000100080cd280000000000000009
+			000000100080cd2c0000000000000009
+			000000100080cd300000000000000009
+			000000100080cd340000000000000009
+			000000100080cd380000000000000009
+			000000100080cd3c0000000000000009
+			000000100080cd400000000000000009
+		</cheat>
+		<cheat name="P2 Page B Infinite Items">
+			000000100080cd440000000000000009
+			000000100080cd480000000000000009
+			000000100080cd4c0000000000000009
+			000000100080cd500000000000000009
+		</cheat>
+		<cheat name="P3 Page B Has 4 Equipment">
+			000000100080ce7f0000000000000004
+		</cheat>
+		<cheat name="P3 Page A Infinite Items">
+			000000100080ce200000000000000009
+			000000100080ce240000000000000009
+			000000100080ce280000000000000009
+			000000100080ce2c0000000000000009
+			000000100080ce300000000000000009
+			000000100080ce340000000000000009
+			000000100080ce380000000000000009
+			000000100080ce3c0000000000000009
+		</cheat>
+		<cheat name="P3 Page B Infinite Items">
+			000000100080ce400000000000000009
+			000000100080ce440000000000000009
+			000000100080ce480000000000000009
+			000000100080ce4c0000000000000009
+		</cheat>
+		<cheat name="P4 Page B Has 4 Equipment">
+			000000100080cf7b0000000000000004
+		</cheat>
+		<cheat name="P4 Page A Infinite Items">
+			000000100080cf1c0000000000000009
+			000000100080cf200000000000000009
+			000000100080cf240000000000000009
+			000000100080cf280000000000000009
+			000000100080cf2c0000000000000009
+			000000100080cf300000000000000009
+			000000100080cf340000000000000009
+			000000100080cf380000000000000009
+		</cheat>
+		<cheat name="P4 Page B Infinite Items">
+			000000100080cf3c0000000000000009
+			000000100080cf400000000000000009
+			000000100080cf440000000000000009
+			000000100080cf480000000000000009
+		</cheat>
+		<cheat name="Enable Internet Rank Mode">
+			000000100081a2e40000000000000001
+		</cheat>
+		<cheat name="Stage 5 Huang Gai Invulnerable">
+			000000100081c0710000000000000002
+		</cheat>
+		<cheat name="No Mission Time Limit">
+			0000001000803e060000000000000009
+		</cheat>
+		<cheat name="Stage 6 Tomb Floor 2 No Mission Time Limit">
+			0000001000803e170000000000000009
+		</cheat>
+		<cheat name="Remove Spell/Terrain/Weapon Limits">
+			000000100080cc220000000000000002
+		</cheat>
+		<cheat name="P1 Remove Spell/Weapon Limit">
+			000000100080cc220000000000000002
+		</cheat>
+		<cheat name="P2 Remove Spell/Weapon Limit">
+			000000100080cd1e0000000000000002
+		</cheat>
+		<cheat name="P3 Remove Spell/Weapon Limit">
+			000000100080ce1a0000000000000002
+		</cheat>
+		<cheat name="P4 Remove Spell/Weapon Limit">
+			000000100080cf160000000000000002
+		</cheat>
+	</cheats>
+</misterromdescription>
