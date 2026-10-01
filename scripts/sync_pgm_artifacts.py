@@ -1,5 +1,6 @@
 """Fail-closed, artifact-only synchronization. No source provenance is persisted."""
 import argparse
+import html
 import os
 from pathlib import Path
 import re
@@ -226,6 +227,35 @@ def summary(counts, preview=False):
     return '\n'.join(lines)
 
 
+def preview_summary(counts, changes, baseline, tokens, provenance=()):
+    filenames = {label: {state: [] for state in ('NEW', 'UPDATED', 'REMOVED')}
+                 for label in GROUPS}
+    # Check all names before rendering any output, including last-known removed names.
+    for path, content in changes.items():
+        name = path.rsplit('/', 1)[-1]
+        if (not allowed_path(path) or disclosed(name.encode(), tokens)
+                or any(sha in name for sha in provenance)):
+            raise SyncError('Artifact filename requires review; preview withheld.')
+        for label, (directory, _, _) in GROUPS.items():
+            if path.startswith(directory + '/') and '/' not in path[len(directory) + 1:]:
+                state = 'REMOVED' if content is None else ('UPDATED' if path in baseline else 'NEW')
+                filenames[label][state].append(name)
+    lines = [summary(counts, preview=True), '']
+    for label, states in filenames.items():
+        lines += [label, '']
+        for state, heading in [('NEW', 'Added'), ('UPDATED', 'Updated'),
+                               ('REMOVED', 'Removed → Legacy')]:
+            lines.append(heading + ':')
+            for name in sorted(states[state]):
+                # Preserve literal filenames in the Markdown summary without active markup.
+                display = re.sub(r'([\\`*_{}\[\]])', r'\\\1', html.escape(name))
+                lines.append('- ' + display)
+            if not states[state]:
+                lines.append('(none)')
+            lines.append('')
+    return '\n'.join(lines).rstrip()
+
+
 def removal_guard(counts, scheduled, approved):
     if scheduled:
         for stats in counts.values():
@@ -305,7 +335,8 @@ def main(argv=None):
             sha = git(source, 'rev-parse', 'HEAD').decode().strip()
             shutil.rmtree(source / '.git')
             changes, counts, expected, baseline = plan(root, source, tokens, (sha,))
-            report = summary(counts, preview=True)
+            report = (summary(counts, preview=True) if options.apply else
+                      preview_summary(counts, changes, baseline, tokens, (sha,)))
             # A summary path inside the checkout would violate the read-only boundary.
             summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
             if summary_path and Path(summary_path).resolve().is_relative_to(root.resolve()):
