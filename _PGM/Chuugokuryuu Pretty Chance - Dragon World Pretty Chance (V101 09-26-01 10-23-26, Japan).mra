@@ -1,7 +1,7 @@
 <misterromdescription>
 	<name>Chuugokuryuu Pretty Chance / Dragon World Pretty Chance (V101 09/26/01 10:23:26, Japan)</name>
 	<setname>dwpc101j</setname>
-	<rbf>PGM-027A-TYPE2</rbf>
+	<rbf>PGM-027A</rbf>
 	<rotation>horizontal</rotation>
 	<mameversion>277</mameversion>
 	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>

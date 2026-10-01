@@ -1,7 +1,7 @@
 <misterromdescription>
 	<name>The Killing Blade Plus / Ao Jian Kuang Dao Jiaqiang Ban (China, ver. 300)</name>
 	<setname>killbldp</setname>
-	<rbf>PGM-027A-TYPE3</rbf>
+	<rbf>PGM-027A</rbf>
 	<rotation>horizontal</rotation>
 	<mameversion>277</mameversion>
 	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>

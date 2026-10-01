@@ -1,7 +1,7 @@
 <misterromdescription>
 	<name>Photo Y2K / Chaoji Bi Yi Bi / Dajia Lai Zhao Cha / Real and Fake (ver. 105)</name>
 	<setname>photoy2k</setname>
-	<rbf>PGM-027A-TYPE1</rbf>
+	<rbf>PGM-027A</rbf>
 	<rotation>horizontal</rotation>
 	<mameversion>277</mameversion>
 	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>

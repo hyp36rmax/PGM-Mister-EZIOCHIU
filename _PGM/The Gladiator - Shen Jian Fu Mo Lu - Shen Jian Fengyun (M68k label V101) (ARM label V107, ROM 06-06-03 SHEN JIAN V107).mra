@@ -1,7 +1,7 @@
 <misterromdescription>
 	<name>The Gladiator / Shen Jian Fu Mo Lu / Shen Jian Fengyun (M68k label V101) (ARM label V107, ROM 06/06/03 SHEN JIAN V107)</name>
 	<setname>theglad</setname>
-	<rbf>PGM-027A-TYPE3</rbf>
+	<rbf>PGM-027A</rbf>
 	<rotation>horizontal</rotation>
 	<mameversion>277</mameversion>
 	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>

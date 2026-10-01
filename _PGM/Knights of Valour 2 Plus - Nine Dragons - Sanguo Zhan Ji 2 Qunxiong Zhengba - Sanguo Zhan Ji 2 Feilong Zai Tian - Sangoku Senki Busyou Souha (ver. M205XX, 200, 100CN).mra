@@ -1,7 +1,7 @@
 <misterromdescription>
 	<name>Knights of Valour 2 Plus - Nine Dragons / Sanguo Zhan Ji 2 Qunxiong Zhengba / Sanguo Zhan Ji 2 Feilong Zai Tian / Sangoku Senki Busyou Souha (ver. M205XX, 200, 100CN)</name>
 	<setname>kov2p</setname>
-	<rbf>PGM-027A-TYPE2</rbf>
+	<rbf>PGM-027A</rbf>
 	<rotation>horizontal</rotation>
 	<mameversion>277</mameversion>
 	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
