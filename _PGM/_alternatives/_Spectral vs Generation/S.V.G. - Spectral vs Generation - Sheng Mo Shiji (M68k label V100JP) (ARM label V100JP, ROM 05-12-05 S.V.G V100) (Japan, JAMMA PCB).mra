@@ -1,0 +1,59 @@
+<misterromdescription>
+	<name>S.V.G. - Spectral vs Generation / Sheng Mo Shiji (M68k label V100JP) (ARM label V100JP, ROM 05/12/05 S.V.G V100) (Japan, JAMMA PCB)</name>
+	<setname>svgpcb</setname>
+	<rbf>PGM-027A</rbf>
+	<rotation>horizontal</rotation>
+	<mameversion>277</mameversion>
+	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
+	<switches default="ffff">
+		<dip name="Test mode"   bits="0" values="1,0" ids="Off,On"/>
+		<dip name="Music"       bits="1" values="0,1" ids="Off,On"/>
+		<dip name="Voice"       bits="2" values="0,1" ids="Off,On"/>
+		<dip name="Free play"   bits="3" values="1,0" ids="Off,On"/>
+		<dip name="Stop mode"   bits="4" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="5" values="1,0" ids="Off,On"/>
+		<dip name="Unused"      bits="6" values="1,0" ids="Off,On"/>
+		<dip name="Debug"       bits="7" values="1,0" ids="Off,On"/>
+		<dip name="Region"      bits="8,15" values="0,1,2,3,4,5,6" ids="China,Taiwan,Japan,Korea,Hong Kong,Spanish Territories,World"/>
+	</switches>
+	<rom index="0" address="0x30000000" zip="pgm.zip|svgpcb.zip|svg.zip">
+        <part>40 A0</part>
+
+        <part>00 00020000 00000000</part>
+        <part name="svg_bios.u49" crc="3346401f"/>
+
+        <part>01 00200000 00000000</part>
+        <part name="pgm_t01s.rom"/>
+
+        <part>02 00200000 00000000</part>
+        <part name="pgm_m01s.rom"/>
+
+        <part>03 00080000 00100000</part>
+        <part name="svg_v100jp_u50.u50" crc="8d0405e4"/>
+
+        <part>04 00200000 00180000</part>
+        <part name="igs_t05601w016.u70" crc="03e110dc"/>
+
+        <part>05 00C00000 00400000</part>
+        <part name="igs_w05601b064.u30" crc="bfe61a71"/>
+        <part name="igs_w05602b032.u31" crc="0685166d"/>
+
+        <part>06 01C00000 00000000</part>
+        <part name="igs_a05601w064.u44" crc="ea6453e4"/>
+        <part name="igs_a05602w064.u45" crc="6d00621b"/>
+        <part name="igs_a05603w064.u46" crc="7b71c64f"/>
+        <part name="igs_a05604w032.u47" crc="9452a567"/>
+
+        <part>07 01000000 00000000</part>
+        <part name="igs_b05601w064.u61" crc="35c0a489"/>
+        <part name="igs_b05602w064.u62" crc="8aad3f85"/>
+
+        <part>08 00003E78 00000188</part>
+        <part name="svgcpb_igs027a_v100_japan.bin" crc="7a59da5d"/>
+
+        <part>09 00800000 00000000</part>
+        <part name="svg_v100jp_u64.u64" crc="399d4a8b"/>
+        <part name="svg_v100jp_u65.u65" crc="6e1c33b1"/>
+	</rom>
+	<nvram index="253" size="131072"/>
+</misterromdescription>

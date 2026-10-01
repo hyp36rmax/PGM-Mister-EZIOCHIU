@@ -1,7 +1,7 @@
 <misterromdescription>
 	<name>DoDonPachi II - Bee Storm (Korea, ver. 102)</name>
 	<setname>ddp2k</setname>
-	<rbf>PGM-027A-TYPE2</rbf>
+	<rbf>PGM-027A</rbf>
 	<rotation>vertical</rotation>
 	<mameversion>277</mameversion>
 	<buttons default="B,A,X,Y,Start,Select,L,R" names="A,B,C,D,-,-,Start,Coin,Pause,SS"/>
