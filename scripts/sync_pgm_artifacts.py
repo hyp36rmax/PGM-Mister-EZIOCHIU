@@ -22,12 +22,24 @@ SHARED_HOSTS = {'github.com', 'gitlab.com', 'bitbucket.org', 'gitee.com'}
 
 
 def allowed_path(name):
-    return any(re.fullmatch(re.escape(directory) + r'/[^/\\\x00-\x1f]+' +
-                           re.escape(suffix), name)
-               for directory, suffix in [('_PGM', '.mra'), ('_PGM/cores', '.rbf'),
-                                         ('_PGM/_alternatives', '.mra'),
-                                         ('legacy/mra', '.mra'), ('legacy/cores', '.rbf'),
-                                         ('legacy/mra/_alternatives', '.mra')])
+    if not safe_relative(name):
+        return False
+    return any(managed_name(name, directory, suffix, label == 'Alternative MRA')
+               for label, (directory, suffix, archive) in GROUPS.items()
+               for directory in (directory, archive))
+
+
+def safe_relative(name):
+    return (bool(name) and not re.search(r'[\\\x00-\x1f\x7f:]', name)
+            and all(part and not part.startswith('.') for part in name.split('/')))
+
+
+def managed_name(path, directory, suffix, recursive=False):
+    if not path.startswith(directory + '/'):
+        return False
+    relative = path[len(directory) + 1:]
+    return (safe_relative(relative) and relative.endswith(suffix)
+            and (recursive or '/' not in relative))
 
 
 def git(root, *args):
@@ -58,6 +70,8 @@ def disclosed(data, tokens):
 
 
 def checked_path(root, relative):
+    if not safe_relative(relative.as_posix() if isinstance(relative, Path) else relative):
+        raise SyncError('Unsafe artifact path.')
     p = root / relative
     for component in [p, *p.parents]:
         if component == root.parent:
@@ -79,12 +93,21 @@ def inventory(root, require=False):
         if folder.exists():
             if not folder.is_dir():
                 raise SyncError('Invalid artifact directory.')
-            for p in sorted(folder.iterdir()):
-                if p.name.endswith(suffix):
-                    checked_path(root, p.relative_to(root))
-                    if not p.is_file() or p.stat().st_size == 0:
-                        raise SyncError('Invalid or empty artifact.')
-                    items[p.name] = p.read_bytes()
+            def collect(directory_path):
+                for p in sorted(directory_path.iterdir()):
+                    if p.is_symlink() and label == 'Alternative MRA':
+                        raise SyncError('Symlink encountered; maintainer review required.')
+                    if p.name.startswith('.'):
+                        continue
+                    if label == 'Alternative MRA' and p.is_dir():
+                        checked_path(root, p.relative_to(root))
+                        collect(p)
+                    elif p.name.endswith(suffix):
+                        checked_path(root, p.relative_to(root))
+                        if not p.is_file() or p.stat().st_size == 0:
+                            raise SyncError('Invalid or empty artifact.')
+                        items[p.relative_to(folder).as_posix()] = p.read_bytes()
+            collect(folder)
         if require and label != 'Alternative MRA' and not items:
             raise SyncError('Source artifact inventory is empty; synchronization aborted.')
         result[label] = items
@@ -155,8 +178,8 @@ def validate_operations(root, changes, expected, baseline):
     permitted = {}
     for label, (directory, suffix, archive) in GROUPS.items():
         old = {name[len(directory) + 1:]: entry[1] for name, entry in baseline.items()
-               if name.startswith(directory + '/') and '/' not in name[len(directory) + 1:]
-               and name.endswith(suffix) and entry[0] == 'file'}
+               if managed_name(name, directory, suffix, label == 'Alternative MRA')
+               and entry[0] == 'file'}
         for name, content in expected[label].items():
             if name not in old or old[name] != content:
                 permitted[directory + '/' + name] = content
@@ -219,6 +242,17 @@ def apply(root, changes, expected, baseline):
         for folder in reversed(created_dirs):
             folder.rmdir()
         raise
+    # Only prune ancestors of removed alternatives, and only when truly empty.
+    alternative_root = root / '_PGM/_alternatives'
+    for name, content in changes.items():
+        if content is None and name.startswith('_PGM/_alternatives/'):
+            parent = (root / name).parent
+            while parent != alternative_root:
+                try:
+                    parent.rmdir()
+                except OSError:
+                    break
+                parent = parent.parent
 
 
 def summary(counts, preview=False):
@@ -237,14 +271,13 @@ def preview_summary(counts, changes, baseline, tokens, provenance=()):
                  for label in GROUPS}
     # Check all names before rendering any output, including last-known removed names.
     for path, content in changes.items():
-        name = path.rsplit('/', 1)[-1]
-        if (not allowed_path(path) or disclosed(name.encode(), tokens)
-                or any(sha in name for sha in provenance)):
+        if (not allowed_path(path) or disclosed(path.encode(), tokens)
+                or any(sha in path for sha in provenance)):
             raise SyncError('Artifact filename requires review; preview withheld.')
-        for label, (directory, _, _) in GROUPS.items():
-            if path.startswith(directory + '/') and '/' not in path[len(directory) + 1:]:
+        for label, (directory, suffix, _) in GROUPS.items():
+            if managed_name(path, directory, suffix, label == 'Alternative MRA'):
                 state = 'REMOVED' if content is None else ('UPDATED' if path in baseline else 'NEW')
-                filenames[label][state].append(name)
+                filenames[label][state].append(path[len(directory) + 1:])
     lines = [summary(counts, preview=True), '']
     for label, states in filenames.items():
         lines += [label, '']
@@ -332,13 +365,13 @@ def commit_subject(message, changes, tokens, provenance=(), identity=()):
     if set(words) & {'core', 'cores', 'rbf', 'implementation'}:
         mentioned.add('Cores')
     actual = {label: [path.rsplit('/', 1)[-1] for path in changes
-                     if path.startswith(directory + '/') and '/' not in path[len(directory) + 1:]]
-              for label, (directory, _, _) in GROUPS.items()}
+                     if managed_name(path, directory, suffix, label == 'Alternative MRA')]
+              for label, (directory, suffix, _) in GROUPS.items()}
     if mentioned != {label for label, names in actual.items() if names}:
         return FALLBACK_SUBJECT
     if words[0] == 'remove' and any(content is not None for path, content in changes.items()
-                                  if any(path.startswith(directory + '/') and '/' not in path[len(directory) + 1:]
-                                         for directory, _, _ in GROUPS.values())):
+                                  if any(managed_name(path, directory, suffix, label == 'Alternative MRA')
+                                         for label, (directory, suffix, _) in GROUPS.items())):
         return FALLBACK_SUBJECT
     core, mra = 'PGM core', 'MRA files'
     if 'pgm-027a' in words:
