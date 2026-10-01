@@ -6,12 +6,16 @@ on:
       - 'scripts/sync_pgm_artifacts.py'
       - 'tests/test_pgm_sync.py'
       - '.github/workflows/*pgm-artifacts.yml'
+      - '.github/PGM_ARTIFACT_SYNC.md'
+      - 'legacy/README.md'
   push:
     branches: [main]
     paths:
       - 'scripts/sync_pgm_artifacts.py'
       - 'tests/test_pgm_sync.py'
       - '.github/workflows/*pgm-artifacts.yml'
+      - '.github/PGM_ARTIFACT_SYNC.md'
+      - 'legacy/README.md'
 
 permissions:
   contents: read

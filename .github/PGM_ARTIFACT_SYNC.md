@@ -6,8 +6,8 @@ New files join the active collection. Updates replace the active copy without cr
 
 ## Setup and first run
 
-1. In **Settings → Secrets and variables → Actions → Secrets**, create a repository secret named `PGM_SOURCE_URL`. Use the current artifact repository's HTTPS clone URL, without embedded credentials. Keep the value out of documentation, issues and logs. The source must be readable without a separate access token.
-2. Review and merge the implementation. Leave the `PGM_SYNC_ENABLED` repository variable unset while checking the first run.
+1. Review and merge this implementation before configuring or using the source. Leave the `PGM_SYNC_ENABLED` repository variable unset while checking the first run.
+2. In **Settings → Secrets and variables → Actions → Secrets**, create a repository secret named `PGM_SOURCE_URL`. Use the current artifact repository's HTTPS clone URL, without embedded credentials. Keep the value out of documentation, issues and logs. The source must be readable without a separate access token.
 3. In **Actions → PGM Artifact Sync → Run workflow**, select the default branch and leave **Apply** off. This previews the counts without changing, committing or pushing any files.
 4. Review the Added, Updated and Removed counts for both MRA files and cores. If removals are unexpected, stop and investigate the source layout and collection.
 5. When the preview looks right, run again with **Apply** on. Enter the reviewed **MRA Removed** and **Cores Removed** counts. If those counts have changed, the run stops before changing files. Review the resulting artifact commit.
