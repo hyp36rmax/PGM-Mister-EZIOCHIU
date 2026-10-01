@@ -1,4 +1,6 @@
 import importlib.util
+import io
+from contextlib import redirect_stdout
 from pathlib import Path
 import tempfile
 import unittest
@@ -309,6 +311,74 @@ class SynchronizationTests(unittest.TestCase):
             self.assertEqual(sync.main([]), 1)
         self.assertEqual(sync.snapshot(self.target), before)
 
+    def preview_output(self):
+        before = sync.snapshot(self.target)
+        summary_file = Path(self.temp.name) / 'summary.md'
+        output = io.StringIO()
+        def clone(*args, **kwargs):
+            sync.shutil.copytree(self.source, Path(args[0][-1]))
+            (Path(args[0][-1]) / '.git').mkdir()
+        with patch.object(sync.Path, 'cwd', return_value=self.target), patch.dict(
+                sync.os.environ, {'PGM_SOURCE_URL': 'https://gitee.com/private-owner/private-repository',
+                                 'GITHUB_STEP_SUMMARY': str(summary_file)}), patch.object(
+                sync, 'git', side_effect=[b'', b'0' * 40]) as git_mock, patch.object(
+                sync.subprocess, 'run', side_effect=clone), patch.object(sync, 'apply') as apply_mock, patch.object(
+                sync, 'publish') as publish_mock, redirect_stdout(output):
+            result = sync.main([])
+            apply_mock.assert_not_called()
+            publish_mock.assert_not_called()
+            self.assertTrue(all(call.args[1] in {'status', 'rev-parse'} for call in git_mock.call_args_list))
+        self.assertEqual(sync.snapshot(self.target), before)
+        return result, output.getvalue(), summary_file.read_text(encoding='utf-8') if summary_file.exists() else ''
+
+    def test_preview_added_updated_removed_filenames_and_counts(self):
+        for directory, suffix, content in (('_PGM', '.mra', MRA), ('_PGM/cores', '.rbf', b'core')):
+            self.write(self.source, directory + '/added' + suffix, content)
+            self.write(self.target, directory + '/updated' + suffix, content)
+            self.write(self.source, directory + '/updated' + suffix, UPDATED if suffix == '.mra' else b'new-core')
+            self.write(self.target, directory + '/removed' + suffix, content)
+        result, output, report = self.preview_output()
+        self.assertEqual(result, 0)
+        for text in (output, report):
+            for suffix in ('.mra', '.rbf'):
+                self.assertIn('Added:\n- added' + suffix, text)
+                self.assertIn('Updated:\n- updated' + suffix, text)
+                self.assertIn('Removed → Legacy:\n- removed' + suffix, text)
+                self.assertNotIn('base' + suffix, text)
+            self.assertIn('Added: 1\nUpdated: 1\nRemoved: 1\nUnchanged: 1', text)
+            self.assertNotIn(str(self.source), text)
+            self.assertNotIn('private-owner', text)
+            self.assertNotIn('private-repository', text)
+            self.assertNotIn('0' * 40, text)
+
+    def test_preview_source_identifying_names_never_printed(self):
+        for directory, suffix in (('_PGM', '.mra'), ('_PGM/cores', '.rbf')):
+            for location in (self.source, self.target):
+                with self.subTest(directory=directory, location=location):
+                    name = 'private-owner' + suffix
+                    path = location / directory / name
+                    self.write(location, directory + '/' + name, MRA if suffix == '.mra' else b'core')
+                    result, output, report = self.preview_output()
+                    self.assertEqual(result, 1)
+                    self.assertNotIn(name, output)
+                    self.assertEqual(report, '')
+                    path.unlink()
+
+    def test_preview_renderer_rejects_unsafe_or_identifying_names(self):
+        _, counts, _, baseline = sync.plan(self.target, self.source, self.tokens)
+        for path in ('_PGM/private-repository.mra', '_PGM/cores/private-owner.rbf',
+                     '_PGM/cores/' + '0' * 40 + '.rbf', '_PGM/nested/game.mra',
+                     '_PGM/evil\n.mra', 'docs/report.mra'):
+            with self.subTest(path=path), self.assertRaises(sync.SyncError):
+                sync.preview_summary(counts, {path: None}, baseline, self.tokens, ('0' * 40,))
+
+    def test_preview_escapes_filename_markup(self):
+        name = 'Game [test] & copy.mra'
+        self.write(self.source, '_PGM/' + name, MRA)
+        result, _, report = self.preview_output()
+        self.assertEqual(result, 0)
+        self.assertIn('- Game \\[test\\] &amp; copy.mra', report)
+
 
 class GitPublicationTests(unittest.TestCase):
     def setUp(self):
@@ -351,6 +421,45 @@ class GitPublicationTests(unittest.TestCase):
         self.assertEqual(self.git(self.remote, 'show', 'main:README.md'), b'Manual documentation')
         self.assertEqual(self.git(self.remote, 'log', '-1', '--format=%s').strip(), b'Update PGM beta artifacts')
         self.assertEqual(set(self.git(self.remote, 'diff-tree', '--no-commit-id', '--name-only', '-r', 'main').decode().splitlines()), set(changes))
+
+    def test_preview_leaves_git_index_history_and_remote_unchanged(self):
+        for number in range(4):
+            (self.root / f'_PGM/cores/removed{number}.rbf').write_bytes(b'last-known-core')
+        self.git(self.root, 'add', '.')
+        self.git(self.root, 'commit', '-m', 'Four removed core fixtures')
+        self.git(self.root, 'push')
+        before = sync.snapshot(self.root)
+        index = (self.root / '.git/index').read_bytes()
+        head = self.git(self.root, 'rev-parse', 'HEAD')
+        remote = self.git(self.remote, 'rev-parse', 'main')
+        output = io.StringIO()
+        original_git = sync.git
+        original_run = sync.subprocess.run
+        def clone(*args, **kwargs):
+            if 'clone' not in args[0]:
+                return original_run(*args, **kwargs)
+            sync.shutil.copytree(self.source, Path(args[0][-1]))
+            (Path(args[0][-1]) / '.git').mkdir()
+        def git(root, *args):
+            if root != self.root:
+                return b'0' * 40
+            return original_git(root, *args)
+        with patch.object(sync.Path, 'cwd', return_value=self.root), patch.dict(sync.os.environ,
+                {'PGM_SOURCE_URL': 'https://gitee.com/private-owner/private-repository',
+                 'GITHUB_STEP_SUMMARY': ''}), patch.object(sync, 'git', side_effect=git) as git_mock, patch.object(
+                sync.subprocess, 'run', side_effect=clone), patch.object(sync, 'apply') as apply_mock, patch.object(
+                sync, 'publish') as publish_mock, redirect_stdout(output):
+            self.assertEqual(sync.main([]), 0, output.getvalue())
+            apply_mock.assert_not_called()
+            publish_mock.assert_not_called()
+            self.assertTrue(all(call.args[1] in {'status', 'rev-parse'} for call in git_mock.call_args_list))
+        self.assertEqual(sync.snapshot(self.root), before)
+        self.assertEqual((self.root / '.git/index').read_bytes(), index)
+        self.assertEqual(self.git(self.root, 'rev-parse', 'HEAD'), head)
+        self.assertEqual(self.git(self.remote, 'rev-parse', 'main'), remote)
+        self.assertIn('Removed: 4', output.getvalue())
+        for number in range(4):
+            self.assertIn(f'- removed{number}.rbf', output.getvalue())
 
     def test_unrelated_staged_path_aborts_before_commit_or_push(self):
         changes, expected, baseline = self.prepare()
