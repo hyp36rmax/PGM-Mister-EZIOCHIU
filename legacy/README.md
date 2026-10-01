@@ -1,5 +1,5 @@
 # Legacy PGM artifacts
 
-Files contained in this directory were previously included in the active PGM MiSTer FPGA public beta artifact set but are no longer included in the current artifact set. They are retained for historical preservation and compatibility reference.
+These files were previously part of the active PGM MiSTer FPGA public beta artifact set. They are kept for historical preservation and compatibility reference after being removed from the current set.
 
-Only removed artifacts are archived here. Ordinary updates replace the active copy. Returning artifacts retain their historical Legacy copy. Filename collisions require maintainer review and never overwrite preserved files.
+Only removed artifacts belong here. Updates replace the active copy without adding an archive. If a file returns, its historical copy stays here. An existing Legacy file is never overwritten automatically; filename collisions stop synchronization for review.

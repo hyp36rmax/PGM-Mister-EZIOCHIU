@@ -2,6 +2,19 @@ name: PGM Artifact Sync
 
 on:
   workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Apply the changes after reviewing a preview'
+        type: boolean
+        default: false
+      expected_mra_removals:
+        description: 'MRA Removed count from the reviewed preview'
+        type: number
+        default: 0
+      expected_core_removals:
+        description: 'Cores Removed count from the reviewed preview'
+        type: number
+        default: 0
   schedule:
     - cron: '23 9 * * *'
 
@@ -14,6 +27,9 @@ concurrency:
 
 jobs:
   sync:
+    if: >-
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      (github.event_name == 'workflow_dispatch' || vars.PGM_SYNC_ENABLED == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -28,4 +44,17 @@ jobs:
         env:
           PGM_SOURCE_URL: ${{ secrets.PGM_SOURCE_URL }}
           GIT_TERMINAL_PROMPT: '0'
-        run: python3 -B scripts/sync_pgm_artifacts.py
+          SYNC_EVENT: ${{ github.event_name }}
+          SYNC_APPLY: ${{ inputs.apply }}
+          EXPECTED_MRA_REMOVALS: ${{ inputs.expected_mra_removals }}
+          EXPECTED_CORE_REMOVALS: ${{ inputs.expected_core_removals }}
+        shell: bash
+        run: |
+          args=()
+          if [[ "$SYNC_EVENT" == "schedule" ]]; then
+            args+=(--apply --scheduled)
+          elif [[ "$SYNC_APPLY" == "true" ]]; then
+            args+=(--apply --expected-mra-removals "$EXPECTED_MRA_REMOVALS")
+            args+=(--expected-core-removals "$EXPECTED_CORE_REMOVALS")
+          fi
+          python3 -B scripts/sync_pgm_artifacts.py "${args[@]}"
