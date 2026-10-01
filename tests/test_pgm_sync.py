@@ -578,6 +578,12 @@ class SynchronizationTests(unittest.TestCase):
                 with self.assertRaises(sync.SyncError):
                     sync.checked_path(self.target, relative)
 
+    def test_allowlist_independent_of_inventory_configuration(self):
+        with patch.dict(sync.GROUPS, {'Other': ('docs', '.mra', 'archive')}):
+            self.assertFalse(sync.allowed_path('docs/unowned.mra'))
+            self.assertFalse(sync.allowed_path('archive/unowned.mra'))
+            self.assertTrue(sync.allowed_path('_PGM/_alternatives/Set/game.mra'))
+
     def test_recursive_symlink_rejected(self):
         folder = self.source / '_PGM/_alternatives/Set'
         folder.mkdir(parents=True)

@@ -24,9 +24,12 @@ SHARED_HOSTS = {'github.com', 'gitlab.com', 'bitbucket.org', 'gitee.com'}
 def allowed_path(name):
     if not safe_relative(name):
         return False
-    return any(managed_name(name, directory, suffix, label == 'Alternative MRA')
-               for label, (directory, suffix, archive) in GROUPS.items()
-               for directory in (directory, archive))
+    # Keep publication ownership independent of the inventory/plan configuration.
+    return any(managed_name(name, directory, suffix, recursive)
+               for directory, suffix, recursive in
+               [('_PGM', '.mra', False), ('_PGM/cores', '.rbf', False),
+                ('_PGM/_alternatives', '.mra', True), ('legacy/mra', '.mra', False),
+                ('legacy/cores', '.rbf', False), ('legacy/mra/_alternatives', '.mra', True)])
 
 
 def safe_relative(name):
