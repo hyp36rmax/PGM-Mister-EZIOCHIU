@@ -15,6 +15,10 @@ on:
         description: 'Cores Removed count from the reviewed preview'
         type: number
         default: 0
+      expected_alternative_mra_removals:
+        description: 'Alternative MRA Removed count from the reviewed preview'
+        type: number
+        default: 0
   schedule:
     - cron: '23 9 * * *'
 
@@ -48,6 +52,7 @@ jobs:
           SYNC_APPLY: ${{ inputs.apply }}
           EXPECTED_MRA_REMOVALS: ${{ inputs.expected_mra_removals }}
           EXPECTED_CORE_REMOVALS: ${{ inputs.expected_core_removals }}
+          EXPECTED_ALTERNATIVE_MRA_REMOVALS: ${{ inputs.expected_alternative_mra_removals }}
         shell: bash
         run: |
           args=()
@@ -56,5 +61,6 @@ jobs:
           elif [[ "$SYNC_APPLY" == "true" ]]; then
             args+=(--apply --expected-mra-removals "$EXPECTED_MRA_REMOVALS")
             args+=(--expected-core-removals "$EXPECTED_CORE_REMOVALS")
+            args+=(--expected-alternative-mra-removals "$EXPECTED_ALTERNATIVE_MRA_REMOVALS")
           fi
           python3 -B scripts/sync_pgm_artifacts.py "${args[@]}"

@@ -30,7 +30,7 @@ class SynchronizationTests(unittest.TestCase):
                      '.github/workflows/other.yml', 'scripts/other.py', 'tests/other.py',
                      'utilities/tool.txt', 'legacy/README.md'):
             self.write(self.target, name, b'Manually maintained content')
-        self.write(self.target, '_PGM/_alternatives/ignored.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/nested/ignored.mra', MRA)
         self.write(self.source, 'utils/untrusted.py', b'raise Exception()')
         self.tokens = ['private-owner', 'private-repository']
 
@@ -134,7 +134,7 @@ class SynchronizationTests(unittest.TestCase):
         _, counts = self.run_sync()
         self.assertEqual(counts['Cores']['NEW'], 1)
         self.assertEqual((self.target / 'README.md').read_bytes(), before)
-        self.assertTrue((self.target / '_PGM/_alternatives/ignored.mra').exists())
+        self.assertTrue((self.target / '_PGM/_alternatives/nested/ignored.mra').exists())
         self.assertFalse((self.target / 'utils/untrusted.py').exists())
 
     def test_malformed_mra(self):
@@ -192,10 +192,11 @@ class SynchronizationTests(unittest.TestCase):
             (Path(args[0][-1]) / '.git').mkdir()
         with patch.object(sync.Path, 'cwd', return_value=self.target), patch.dict(
                 sync.os.environ, {'PGM_SOURCE_URL': 'https://github.com/private-owner/private-repository'}), patch.object(
-                sync, 'git', side_effect=[b'', b'0' * 40]), patch.object(
+                sync, 'git', side_effect=[b'', b'0' * 40, b'']), patch.object(
                 sync.subprocess, 'run', side_effect=clone), patch.object(sync, 'publish') as publish_mock:
             self.assertEqual(sync.main(['--apply', '--expected-mra-removals', '0',
-                                        '--expected-core-removals', '0']), 0)
+                                        '--expected-core-removals', '0',
+                                        '--expected-alternative-mra-removals', '0']), 0)
             self.assertEqual(publish_mock.call_count, 1)
             self.assertEqual(set(publish_mock.call_args.args[1]), {'_PGM/new.mra'})
 
@@ -234,10 +235,11 @@ class SynchronizationTests(unittest.TestCase):
         self.assert_abort()
 
     def test_allowlist_rejects_nested_and_unrelated_paths(self):
-        for name in ('_PGM/game.mra', '_PGM/cores/core.rbf', 'legacy/mra/game.mra', 'legacy/cores/core.rbf'):
+        for name in ('_PGM/game.mra', '_PGM/cores/core.rbf', 'legacy/mra/game.mra', 'legacy/cores/core.rbf',
+                     '_PGM/_alternatives/game.mra', 'legacy/mra/_alternatives/game.mra'):
             self.assertTrue(sync.allowed_path(name), name)
         for name in ('README.md', 'legacy/README.md', '.github/workflows/sync.yml',
-                     '_PGM/_alternatives/game.mra', '_PGM/cores/nested/core.rbf',
+                     '_PGM/_alternatives/nested/game.mra', '_PGM/cores/nested/core.rbf',
                      'legacy/mra/nested/game.mra', '_PGM/../game.mra',
                      '_PGM/core.rbf', 'legacy/cores/game.mra', '_PGM/evil\n.mra'):
             self.assertFalse(sync.allowed_path(name), name)
@@ -379,6 +381,174 @@ class SynchronizationTests(unittest.TestCase):
         self.assertEqual(result, 0)
         self.assertIn('- Game \\[test\\] &amp; copy.mra', report)
 
+    def test_alternative_new(self):
+        self.write(self.source, '_PGM/_alternatives/new.mra', MRA)
+        _, counts = self.run_sync()
+        self.assertEqual(counts['Alternative MRA']['NEW'], 1)
+        self.assertEqual((self.target / '_PGM/_alternatives/new.mra').read_bytes(), MRA)
+        self.assertFalse((self.target / 'legacy/mra/_alternatives').exists())
+
+    def test_alternative_updated_no_archive(self):
+        self.write(self.target, '_PGM/_alternatives/game.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/game.mra', UPDATED)
+        _, counts = self.run_sync()
+        self.assertEqual(counts['Alternative MRA']['UPDATED'], 1)
+        self.assertEqual((self.target / '_PGM/_alternatives/game.mra').read_bytes(), UPDATED)
+        self.assertFalse((self.target / 'legacy/mra/_alternatives').exists())
+
+    def test_alternative_unchanged(self):
+        for root in (self.target, self.source):
+            self.write(root, '_PGM/_alternatives/game.mra', MRA)
+        before = sync.snapshot(self.target)
+        changes, counts = self.run_sync()
+        self.assertEqual(changes, {})
+        self.assertEqual(counts['Alternative MRA']['UNCHANGED'], 1)
+        self.assertEqual(sync.snapshot(self.target), before)
+
+    def test_alternative_removed_exact_legacy_copy(self):
+        for root in (self.target, self.source):
+            self.write(root, '_PGM/_alternatives/retained.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/removed.mra', UPDATED)
+        _, counts = self.run_sync()
+        self.assertEqual(counts['Alternative MRA']['REMOVED'], 1)
+        self.assertFalse((self.target / '_PGM/_alternatives/removed.mra').exists())
+        self.assertEqual((self.target / 'legacy/mra/_alternatives/removed.mra').read_bytes(), UPDATED)
+
+    def test_alternative_returning_retains_history(self):
+        self.write(self.target, 'legacy/mra/_alternatives/returned.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/returned.mra', UPDATED)
+        self.run_sync()
+        self.assertEqual((self.target / '_PGM/_alternatives/returned.mra').read_bytes(), UPDATED)
+        self.assertEqual((self.target / 'legacy/mra/_alternatives/returned.mra').read_bytes(), MRA)
+
+    def test_alternative_collision_aborts_whole_plan(self):
+        self.write(self.target, '_PGM/_alternatives/removed.mra', MRA)
+        self.write(self.target, 'legacy/mra/_alternatives/removed.mra', UPDATED)
+        self.write(self.source, '_PGM/_alternatives/retained.mra', MRA)
+        self.write(self.source, '_PGM/new.mra', UPDATED)
+        self.assert_abort()
+
+    def test_alternative_missing_or_empty_source_fails_closed(self):
+        self.write(self.target, '_PGM/_alternatives/active.mra', MRA)
+        self.assert_abort()
+        (self.source / '_PGM/_alternatives').mkdir()
+        self.assert_abort()
+        self.write(self.source, '_PGM/_alternatives/nested/active.mra', MRA)
+        self.assert_abort()
+
+    def test_alternative_unreadable_source_fails_closed(self):
+        self.write(self.source, '_PGM/_alternatives/active.mra', MRA)
+        original = sync.Path.iterdir
+        def iterdir(path):
+            if path == self.source / '_PGM/_alternatives':
+                raise PermissionError('Unreadable fixture')
+            return original(path)
+        before = sync.snapshot(self.target)
+        with patch.object(sync.Path, 'iterdir', new=iterdir), self.assertRaises(PermissionError):
+            sync.plan(self.target, self.source, self.tokens)
+        self.assertEqual(sync.snapshot(self.target), before)
+
+    def test_alternative_malformed_and_disclosing_candidates(self):
+        for name, content in [('bad.mra', b'broken XML'), ('private-owner.mra', MRA),
+                              ('game.mra', b'<misterromdescription>private-repository</misterromdescription>')]:
+            with self.subTest(name=name):
+                path = self.source / '_PGM/_alternatives' / name
+                self.write(self.source, str(path.relative_to(self.source)), content)
+                self.assert_abort()
+                path.unlink()
+
+    def test_alternative_nested_and_unrelated_files_ignored(self):
+        for root in (self.source, self.target):
+            self.write(root, '_PGM/_alternatives/nested/game.mra', MRA)
+            self.write(root, '_PGM/other/game.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/nested/game.mra', UPDATED)
+        self.write(self.source, '_PGM/other/game.mra', UPDATED)
+        before = sync.snapshot(self.target)
+        changes, _ = self.run_sync()
+        self.assertEqual(changes, {})
+        self.assertEqual(sync.snapshot(self.target), before)
+        for path in ('_PGM/_alternatives/nested/game.mra',
+                     'legacy/mra/_alternatives/nested/game.mra', '_PGM/other/game.mra'):
+            self.assertFalse(sync.allowed_path(path))
+
+    def test_alternative_preview_lists_changes_only(self):
+        for root in (self.source, self.target):
+            self.write(root, '_PGM/_alternatives/unchanged.mra', MRA)
+            self.write(root, '_PGM/_alternatives/updated.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/updated.mra', UPDATED)
+        self.write(self.source, '_PGM/_alternatives/added.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/removed.mra', MRA)
+        result, output, report = self.preview_output()
+        self.assertEqual(result, 0)
+        for text in (output, report):
+            self.assertIn('Alternative MRA\nAdded: 1\nUpdated: 1\nRemoved: 1\nUnchanged: 1', text)
+            self.assertIn('Alternative MRA\n\nAdded:\n- added.mra\n\nUpdated:\n- updated.mra\n\nRemoved → Legacy:\n- removed.mra', text)
+            self.assertNotIn('unchanged.mra', text)
+
+    def test_alternative_independent_removal_guard_and_confirmation(self):
+        zero = {'NEW': 0, 'UPDATED': 0, 'UNCHANGED': 100, 'REMOVED': 0}
+        counts = {'MRA': zero, 'Cores': zero,
+                  'Alternative MRA': {'NEW': 0, 'UPDATED': 0, 'UNCHANGED': 1, 'REMOVED': 1}}
+        with self.assertRaises(sync.SyncError):
+            sync.removal_guard(counts, True, {})
+        with self.assertRaises(sync.SyncError):
+            sync.removal_guard(counts, False, {'MRA': 0, 'Cores': 0, 'Alternative MRA': 0})
+        sync.removal_guard(counts, False, {'MRA': 0, 'Cores': 0, 'Alternative MRA': 1})
+
+    def test_alternative_confirmation_mismatch_aborts_before_application(self):
+        for root in (self.source, self.target):
+            self.write(root, '_PGM/_alternatives/retained.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/removed.mra', MRA)
+        before = sync.snapshot(self.target)
+        def clone(*args, **kwargs):
+            sync.shutil.copytree(self.source, Path(args[0][-1]))
+            (Path(args[0][-1]) / '.git').mkdir()
+        with patch.object(sync.Path, 'cwd', return_value=self.target), patch.dict(sync.os.environ,
+                {'PGM_SOURCE_URL': 'https://gitee.com/private-owner/private-repository'}), patch.object(
+                sync, 'git', side_effect=[b'', b'0' * 40, b'']), patch.object(
+                sync.subprocess, 'run', side_effect=clone), patch.object(sync, 'apply') as apply_mock, patch.object(
+                sync, 'publish') as publish_mock, redirect_stdout(io.StringIO()):
+            self.assertEqual(sync.main(['--apply', '--expected-mra-removals', '0',
+                                       '--expected-core-removals', '0',
+                                       '--expected-alternative-mra-removals', '0']), 1)
+            apply_mock.assert_not_called()
+            publish_mock.assert_not_called()
+        self.assertEqual(sync.snapshot(self.target), before)
+
+    def test_unsafe_source_message_never_reaches_apply_output(self):
+        self.write(self.source, '_PGM/new.mra', MRA)
+        raw = (b'Update MRAs https://gitee.com/private-owner/private-repository\n\0'
+               b'Source Fixture Author\0author@example.invalid\0HEAD -> private-branch')
+        output = io.StringIO()
+        def clone(*args, **kwargs):
+            sync.shutil.copytree(self.source, Path(args[0][-1]))
+            (Path(args[0][-1]) / '.git').mkdir()
+        with patch.object(sync.Path, 'cwd', return_value=self.target), patch.dict(sync.os.environ,
+                {'PGM_SOURCE_URL': 'https://gitee.com/private-owner/private-repository'}), patch.object(
+                sync, 'git', side_effect=[b'', b'0' * 40, raw]), patch.object(
+                sync.subprocess, 'run', side_effect=clone), patch.object(sync, 'publish') as publish_mock, redirect_stdout(output):
+            self.assertEqual(sync.main(['--apply', '--expected-mra-removals', '0',
+                                       '--expected-core-removals', '0',
+                                       '--expected-alternative-mra-removals', '0']), 0)
+        self.assertEqual(publish_mock.call_args.args[-1], 'Update PGM beta artifacts')
+        for text in ('private-owner', 'private-repository', 'Source Fixture Author',
+                     'author@example.invalid', 'private-branch', '0' * 40):
+            self.assertNotIn(text, output.getvalue())
+
+    def test_no_changes_apply_does_not_read_source_message_or_commit(self):
+        before = sync.snapshot(self.target)
+        def clone(*args, **kwargs):
+            sync.shutil.copytree(self.source, Path(args[0][-1]))
+            (Path(args[0][-1]) / '.git').mkdir()
+        with patch.object(sync.Path, 'cwd', return_value=self.target), patch.dict(sync.os.environ,
+                {'PGM_SOURCE_URL': 'https://gitee.com/private-owner/private-repository'}), patch.object(
+                sync, 'git', side_effect=[b'', b'9' * 40]) as git_mock, patch.object(
+                sync.subprocess, 'run', side_effect=clone), patch.object(sync, 'publish') as publish_mock, redirect_stdout(io.StringIO()):
+            self.assertEqual(sync.main(['--apply']), 0)
+            publish_mock.assert_not_called()
+            self.assertEqual(git_mock.call_count, 2)
+        self.assertEqual(sync.snapshot(self.target), before)
+
 
 class GitPublicationTests(unittest.TestCase):
     def setUp(self):
@@ -425,6 +595,10 @@ class GitPublicationTests(unittest.TestCase):
     def test_preview_leaves_git_index_history_and_remote_unchanged(self):
         for number in range(4):
             (self.root / f'_PGM/cores/removed{number}.rbf').write_bytes(b'last-known-core')
+        for root in (self.root, self.source):
+            (root / '_PGM/_alternatives').mkdir()
+            (root / '_PGM/_alternatives/retained.mra').write_bytes(MRA)
+        (self.root / '_PGM/_alternatives/removed.mra').write_bytes(UPDATED)
         self.git(self.root, 'add', '.')
         self.git(self.root, 'commit', '-m', 'Four removed core fixtures')
         self.git(self.root, 'push')
@@ -460,6 +634,7 @@ class GitPublicationTests(unittest.TestCase):
         self.assertIn('Removed: 4', output.getvalue())
         for number in range(4):
             self.assertIn(f'- removed{number}.rbf', output.getvalue())
+        self.assertIn('Alternative MRA\n\nAdded:\n(none)\n\nUpdated:\n(none)\n\nRemoved → Legacy:\n- removed.mra', output.getvalue())
 
     def test_unrelated_staged_path_aborts_before_commit_or_push(self):
         changes, expected, baseline = self.prepare()
@@ -525,6 +700,133 @@ class GitPublicationTests(unittest.TestCase):
             sync.publish(self.root, changes, expected, baseline)
         self.assertEqual(self.git(self.remote, 'rev-parse', 'main'), newer_sha)
         self.assertEqual(self.git(self.remote, 'show', 'main:README.md'), b'Newer maintainer work')
+
+    def test_alternative_staging_and_removed_legacy_bytes(self):
+        for root in (self.root, self.source):
+            (root / '_PGM/_alternatives').mkdir()
+            (root / '_PGM/_alternatives/retained.mra').write_bytes(MRA)
+        (self.root / '_PGM/_alternatives/removed.mra').write_bytes(UPDATED)
+        (self.source / '_PGM/_alternatives/new.mra').write_bytes(MRA)
+        self.git(self.root, 'add', '.')
+        self.git(self.root, 'commit', '-m', 'Alternative fixtures')
+        self.git(self.root, 'push')
+        changes, _, expected, baseline = sync.plan(self.root, self.source, ['private-owner'])
+        sync.apply(self.root, changes, expected, baseline)
+        subject = sync.commit_subject(b'Refresh alternate game definitions', changes, ['private-owner'])
+        self.assertEqual(subject, 'Update alternative MRA files')
+        sync.publish(self.root, changes, expected, baseline, subject)
+        self.assertEqual(self.git(self.remote, 'show', 'main:legacy/mra/_alternatives/removed.mra'), UPDATED)
+        self.assertEqual(self.git(self.remote, 'show', 'main:_PGM/_alternatives/new.mra'), MRA)
+        self.assertEqual(self.git(self.remote, 'log', '-1', '--format=%s').strip(), subject.encode())
+        self.assertEqual(self.git(self.remote, 'log', '-1', '--format=%an|%ae').strip(),
+                         b'PGM Preservation Bot|pgm-preservation-bot@users.noreply.github.com')
+
+    def test_alternative_staged_bytes_and_nested_path_violation(self):
+        (self.source / '_PGM/_alternatives').mkdir()
+        (self.source / '_PGM/_alternatives/new.mra').write_bytes(MRA)
+        changes, _, expected, baseline = sync.plan(self.root, self.source, ['private-owner'])
+        sync.apply(self.root, changes, expected, baseline)
+        self.git(self.root, 'add', '--', *changes)
+        sync.verify_staged(self.root, changes)
+        (self.root / '_PGM/_alternatives/new.mra').write_bytes(UPDATED)
+        self.git(self.root, 'add', '_PGM/_alternatives/new.mra')
+        with self.assertRaisesRegex(sync.SyncError, 'bytes'):
+            sync.verify_staged(self.root, changes)
+        (self.root / '_PGM/_alternatives/nested').mkdir()
+        (self.root / '_PGM/_alternatives/nested/outside.mra').write_bytes(MRA)
+        self.git(self.root, 'add', '_PGM/_alternatives/nested/outside.mra')
+        with self.assertRaisesRegex(sync.SyncError, 'boundary'):
+            sync.verify_staged(self.root, changes)
+        self.assertEqual(self.git(self.remote, 'rev-parse', 'main'), self.initial_sha)
+
+    def test_real_source_commit_context_never_copies_author_or_branch(self):
+        self.git(self.source, 'init', '--initial-branch=fixture-source-branch')
+        self.git(self.source, 'config', 'user.name', 'Source Fixture Author')
+        self.git(self.source, 'config', 'user.email', 'source-author@example.invalid')
+        self.git(self.source, 'add', '.')
+        self.git(self.source, 'commit', '-m', 'Refresh core')
+        source_sha = self.git(self.source, 'rev-parse', 'HEAD').decode().strip()
+        output = io.StringIO()
+        with redirect_stdout(output):
+            subject = sync.source_commit_subject(self.source, {'_PGM/cores/PGM.rbf': b'core'},
+                                                 ['private-owner'], (source_sha,))
+        self.assertEqual(subject, 'Update PGM core')
+        self.assertEqual(output.getvalue(), '')
+        self.assertNotIn('Source Fixture Author', subject)
+        self.assertNotIn('source-author@example.invalid', subject)
+        self.assertNotIn('fixture-source-branch', subject)
+        self.assertNotIn(source_sha, subject)
+
+
+class CommitNamingTests(unittest.TestCase):
+    tokens = ['private-owner', 'private-repository', 'https://example.invalid/private-owner/private-repository']
+    sha = 'a1' * 20
+
+    def name(self, subject, changes, identity=()):
+        return sync.commit_subject(subject, changes, self.tokens, (self.sha,), identity)
+
+    def test_safe_core_subject(self):
+        self.assertEqual(self.name(b'Refresh core', {'_PGM/cores/PGM.rbf': b'core'}), 'Update PGM core')
+
+    def test_safe_mra_subject(self):
+        self.assertEqual(self.name(b'Fix MRAs', {'_PGM/game.mra': MRA}), 'Update MRA files')
+
+    def test_safe_alternative_subject(self):
+        self.assertEqual(self.name(b'Update alternate game definitions',
+                                  {'_PGM/_alternatives/game.mra': MRA}), 'Update alternative MRA files')
+
+    def test_safe_combined_subject_and_verified_specific_core(self):
+        changes = {'_PGM/cores/PGM-027A-TYPE1.rbf': b'core', '_PGM/game.mra': MRA}
+        self.assertEqual(self.name(b'Update PGM-027A implementation and MRAs', changes),
+                         'Update MRA files and PGM-027A core')
+        self.assertEqual(self.name(b'Fix KOV2 MRA and update core',
+                                  {'_PGM/KOV2.mra': MRA, '_PGM/cores/PGM.rbf': b'core'}),
+                         'Update KOV2 MRA files and PGM core')
+
+    def test_mismatched_categories_or_feature_use_fallback(self):
+        for subject, changes in [(b'Update core and MRAs', {'_PGM/game.mra': MRA}),
+                                 (b'Fix MRAs', {'_PGM/cores/PGM.rbf': b'core'}),
+                                 (b'Fix KOV2 MRA', {'_PGM/unrelated.mra': MRA}),
+                                 (b'Update PGM-027A core', {'_PGM/cores/other.rbf': b'core'})]:
+            with self.subTest(subject=subject):
+                self.assertEqual(self.name(subject, changes), sync.FALLBACK_SUBJECT)
+
+    def test_unsafe_source_subjects_use_fallback(self):
+        for subject in [b'Update core https://example.invalid/private-owner/private-repository',
+                        b'Update core private-owner', b'Update core private-repository',
+                        b'Update core ' + self.sha.encode(), b'Update core\x1b[31m',
+                        b'Update core\r', b'Update core\t', b'Update core\nSource context',
+                        b'Update core ' + b'x' * 121, b'Improve everything', b'Update core with AI',
+                        b'Update add remove core', b'Update core core core', b'Remove core',
+                        b'Update core Source Fixture Author', b'Update core author@example.invalid',
+                        b'Update core /tmp/source', b'Update core main', b'Update core\xff']:
+            with self.subTest(subject=subject):
+                self.assertEqual(self.name(subject, {'_PGM/cores/PGM.rbf': b'core'},
+                                           ('Source Fixture Author', 'author@example.invalid', 'main')),
+                                 'Update PGM beta artifacts')
+
+    def test_source_context_and_identity_are_never_printed(self):
+        output = io.StringIO()
+        raw = (b'Update core https://example.invalid/private-owner/private-repository\n\0'
+               b'Source Fixture Author\0author@example.invalid\0HEAD -> main, origin/main')
+        with patch.object(sync, 'git', return_value=raw), redirect_stdout(output):
+            subject = sync.source_commit_subject(Path('fixture'), {'_PGM/cores/PGM.rbf': b'core'},
+                                                 self.tokens, (self.sha,))
+        self.assertEqual(subject, sync.FALLBACK_SUBJECT)
+        self.assertEqual(output.getvalue(), '')
+
+    def test_valid_source_context_uses_only_safe_target_words(self):
+        raw = b'Refresh core\n\0Source Fixture Author\0author@example.invalid\0HEAD -> main, origin/main'
+        with patch.object(sync, 'git', return_value=raw):
+            subject = sync.source_commit_subject(Path('fixture'), {'_PGM/cores/PGM.rbf': b'core'},
+                                                 self.tokens, (self.sha,))
+        self.assertEqual(subject, 'Update PGM core')
+        for forbidden in ('Source Fixture Author', 'author@example.invalid', 'main', self.sha):
+            self.assertNotIn(forbidden, subject)
+
+    def test_no_artifact_changes_or_verbatim_subject_uses_fallback(self):
+        self.assertEqual(self.name(b'Refresh core', {}), sync.FALLBACK_SUBJECT)
+        self.assertEqual(self.name(b'Update PGM core', {'_PGM/cores/PGM.rbf': b'core'}), sync.FALLBACK_SUBJECT)
 
 
 if __name__ == '__main__':

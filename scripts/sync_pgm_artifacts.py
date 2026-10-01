@@ -16,6 +16,7 @@ class SyncError(Exception):
 
 
 GROUPS = {'MRA': ('_PGM', '.mra', 'legacy/mra'),
+          'Alternative MRA': ('_PGM/_alternatives', '.mra', 'legacy/mra/_alternatives'),
           'Cores': ('_PGM/cores', '.rbf', 'legacy/cores')}
 SHARED_HOSTS = {'github.com', 'gitlab.com', 'bitbucket.org', 'gitee.com'}
 
@@ -24,7 +25,9 @@ def allowed_path(name):
     return any(re.fullmatch(re.escape(directory) + r'/[^/\\\x00-\x1f]+' +
                            re.escape(suffix), name)
                for directory, suffix in [('_PGM', '.mra'), ('_PGM/cores', '.rbf'),
-                                         ('legacy/mra', '.mra'), ('legacy/cores', '.rbf')])
+                                         ('_PGM/_alternatives', '.mra'),
+                                         ('legacy/mra', '.mra'), ('legacy/cores', '.rbf'),
+                                         ('legacy/mra/_alternatives', '.mra')])
 
 
 def git(root, *args):
@@ -70,7 +73,7 @@ def inventory(root, require=False):
     result = {}
     for label, (directory, suffix, _) in GROUPS.items():
         folder = checked_path(root, directory)
-        if require and not folder.is_dir():
+        if require and label != 'Alternative MRA' and not folder.is_dir():
             raise SyncError('Source artifact layout validation failed.')
         items = {}
         if folder.exists():
@@ -82,7 +85,7 @@ def inventory(root, require=False):
                     if not p.is_file() or p.stat().st_size == 0:
                         raise SyncError('Invalid or empty artifact.')
                     items[p.name] = p.read_bytes()
-        if require and not items:
+        if require and label != 'Alternative MRA' and not items:
             raise SyncError('Source artifact inventory is empty; synchronization aborted.')
         result[label] = items
     return result
@@ -108,7 +111,7 @@ def plan(root, source, tokens, provenance=()):
         for name, content in items.items():
             if disclosed(name.encode(), tokens) or any(s in name for s in provenance):
                 raise SyncError('Candidate artifact name requires disclosure review.')
-            if label == 'MRA':
+            if GROUPS[label][1] == '.mra':
                 if disclosed(content, tokens) or any(s.encode() in content for s in provenance):
                     raise SyncError('Candidate MRA requires disclosure review: ' + ascii(name))
                 try:
@@ -117,6 +120,8 @@ def plan(root, source, tokens, provenance=()):
                 except (ET.ParseError, ValueError):
                     raise SyncError('Candidate MRA validation failed: ' + ascii(name)) from None
     previous = inventory(root)
+    if previous['Alternative MRA'] and not current['Alternative MRA']:
+        raise SyncError('Alternative MRA source collection is missing or empty; maintainer review required.')
     baseline = snapshot(root)
     # Audit all project-controlled files, including helpers, workflows and reports.
     for name, entry in baseline.items():
@@ -291,14 +296,96 @@ def verify_staged(root, changes):
             raise SyncError('Staged artifact bytes differ from the approved artifact.')
 
 
-def publish(root, changes, expected, baseline):
+FALLBACK_SUBJECT = 'Update PGM beta artifacts'
+
+
+def commit_subject(message, changes, tokens, provenance=(), identity=()):
+    """Recognize a small safe vocabulary; never publish arbitrary source text."""
+    try:
+        subject = message.decode('utf-8').rstrip('\n')
+    except UnicodeDecodeError:
+        return FALLBACK_SUBJECT
+    protected = tokens + [value for value in identity if value]
+    if (not subject or len(subject) > 120 or not re.fullmatch(r'[A-Za-z0-9 ,&-]+', subject)
+            or disclosed(subject.encode(), protected)
+            or any(sha.casefold() in subject.casefold() for sha in provenance)
+            or re.search(r'\b[0-9a-fA-F]{40}\b', subject)):
+        return FALLBACK_SUBJECT
+    words = re.findall(r'[a-z0-9-]+', subject.casefold())
+    vocabulary = {'update', 'fix', 'add', 'remove', 'refresh', 'pgm', 'core', 'cores',
+                  'rbf', 'implementation', 'mra', 'mras', 'file', 'files', 'primary',
+                  'alternate', 'alternative', 'alternatives', 'definition', 'definitions',
+                  'game', 'games', 'and', 'pgm-027a', 'kov2'}
+    if not words or words[0] not in {'update', 'fix', 'add', 'remove', 'refresh'} or set(words) - vocabulary:
+        return FALLBACK_SUBJECT
+    actions = [word for word in words if word in {'update', 'fix', 'add', 'remove', 'refresh'}]
+    if len(actions) > 1 and not re.fullmatch(r'fix (?:kov2 )?mras? and update (?:pgm )?core', subject.casefold()):
+        return FALLBACK_SUBJECT
+    if any(words.count(word) > 1 for word in {'core', 'cores', 'mra', 'mras', 'definition', 'definitions'}):
+        return FALLBACK_SUBJECT
+    mentioned = set()
+    alternative = bool(set(words) & {'alternate', 'alternative', 'alternatives'})
+    if alternative and set(words) & {'mra', 'mras', 'definition', 'definitions'}:
+        mentioned.add('Alternative MRA')
+    if set(words) & {'mra', 'mras'} and (not alternative or 'primary' in words):
+        mentioned.add('MRA')
+    if set(words) & {'core', 'cores', 'rbf', 'implementation'}:
+        mentioned.add('Cores')
+    actual = {label: [path.rsplit('/', 1)[-1] for path in changes
+                     if path.startswith(directory + '/') and '/' not in path[len(directory) + 1:]]
+              for label, (directory, _, _) in GROUPS.items()}
+    if mentioned != {label for label, names in actual.items() if names}:
+        return FALLBACK_SUBJECT
+    if words[0] == 'remove' and any(content is not None for path, content in changes.items()
+                                  if any(path.startswith(directory + '/') and '/' not in path[len(directory) + 1:]
+                                         for directory, _, _ in GROUPS.values())):
+        return FALLBACK_SUBJECT
+    core, mra = 'PGM core', 'MRA files'
+    if 'pgm-027a' in words:
+        if not actual['Cores'] or not all('PGM-027A' in name.upper() for name in actual['Cores']):
+            return FALLBACK_SUBJECT
+        core = 'PGM-027A core'
+    if 'kov2' in words:
+        if not actual['MRA'] or not all(re.search(r'kov2|knights of valour 2', name, re.I)
+                                        for name in actual['MRA']):
+            return FALLBACK_SUBJECT
+        mra = 'KOV2 MRA files'
+    descriptions = [description for label, description in
+                    [('MRA', mra), ('Alternative MRA', 'alternative MRA files'), ('Cores', core)]
+                    if actual[label]]
+    if not descriptions:
+        return FALLBACK_SUBJECT
+    description = ' and '.join(descriptions) if len(descriptions) < 3 else ', '.join(descriptions[:-1]) + ' and ' + descriptions[-1]
+    target = 'Update ' + description
+    # A verbatim source subject is never reused, even when it resembles our wording.
+    if target.casefold() == subject.casefold() or disclosed(target.encode(), protected):
+        return FALLBACK_SUBJECT
+    return target
+
+
+def source_commit_subject(source, changes, tokens, provenance):
+    context = git(source, 'log', '-1', '--format=%B%x00%an%x00%ae%x00%D').rstrip(b'\n')
+    fields = context.split(b'\0')
+    if len(fields) != 4:
+        return FALLBACK_SUBJECT
+    message, author, email, refs = fields
+    try:
+        identities = [author.decode('utf-8'), email.decode('utf-8')]
+        for ref in refs.decode('utf-8').split(', '):
+            identities.append(ref.removeprefix('HEAD -> ').removeprefix('origin/'))
+    except UnicodeDecodeError:
+        return FALLBACK_SUBJECT
+    return commit_subject(message, changes, tokens, provenance, identities)
+
+
+def publish(root, changes, expected, baseline, subject=FALLBACK_SUBJECT):
     verify_final(root, changes, expected, baseline)
     git(root, '-c', 'core.autocrlf=false', 'add', '--', *changes.keys())
     verify_staged(root, changes)
     verify_final(root, changes, expected, baseline)
     git(root, '-c', 'user.name=PGM Preservation Bot',
         '-c', 'user.email=pgm-preservation-bot@users.noreply.github.com',
-        '-c', 'core.hooksPath=/dev/null', 'commit', '-m', 'Update PGM beta artifacts')
+        '-c', 'core.hooksPath=/dev/null', 'commit', '-m', subject)
     # A concurrent target update rejects this ordinary fast-forward push.
     git(root, 'push', 'origin', 'HEAD')
 
@@ -308,6 +395,7 @@ def main(argv=None):
     parser.add_argument('--apply', action='store_true', help='Apply and publish the reviewed changes.')
     parser.add_argument('--scheduled', action='store_true')
     parser.add_argument('--expected-mra-removals', type=int, default=-1)
+    parser.add_argument('--expected-alternative-mra-removals', type=int, default=-1)
     parser.add_argument('--expected-core-removals', type=int, default=-1)
     options = parser.parse_args(argv)
     root = Path.cwd()
@@ -333,8 +421,10 @@ def main(argv=None):
             except (subprocess.SubprocessError, OSError):
                 raise SyncError('Source retrieval failed; no artifact changes applied.') from None
             sha = git(source, 'rev-parse', 'HEAD').decode().strip()
-            shutil.rmtree(source / '.git')
             changes, counts, expected, baseline = plan(root, source, tokens, (sha,))
+            subject = (source_commit_subject(source, changes, tokens, (sha,))
+                       if options.apply and changes else FALLBACK_SUBJECT)
+            shutil.rmtree(source / '.git')
             report = (summary(counts, preview=True) if options.apply else
                       preview_summary(counts, changes, baseline, tokens, (sha,)))
             # A summary path inside the checkout would violate the read-only boundary.
@@ -351,10 +441,12 @@ def main(argv=None):
                 print('Preview only. No files changed, committed or pushed.')
                 return 0
             removal_guard(counts, options.scheduled,
-                          {'MRA': options.expected_mra_removals, 'Cores': options.expected_core_removals})
+                          {'MRA': options.expected_mra_removals,
+                           'Alternative MRA': options.expected_alternative_mra_removals,
+                           'Cores': options.expected_core_removals})
             # The source checkout never enters the target, caches, or uploaded artifacts.
             apply(root, changes, expected, baseline)
-        publish(root, changes, expected, baseline)
+        publish(root, changes, expected, baseline, subject)
         print(summary(counts))
         if summary_path:
             Path(summary_path).write_text(summary(counts) + '\n', encoding='utf-8')
