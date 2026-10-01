@@ -30,7 +30,7 @@ class SynchronizationTests(unittest.TestCase):
                      '.github/workflows/other.yml', 'scripts/other.py', 'tests/other.py',
                      'utilities/tool.txt', 'legacy/README.md'):
             self.write(self.target, name, b'Manually maintained content')
-        self.write(self.target, '_PGM/_alternatives/nested/ignored.mra', MRA)
+        self.write(self.target, '_PGM/other/nested/ignored.mra', MRA)
         self.write(self.source, 'utils/untrusted.py', b'raise Exception()')
         self.tokens = ['private-owner', 'private-repository']
 
@@ -134,7 +134,7 @@ class SynchronizationTests(unittest.TestCase):
         _, counts = self.run_sync()
         self.assertEqual(counts['Cores']['NEW'], 1)
         self.assertEqual((self.target / 'README.md').read_bytes(), before)
-        self.assertTrue((self.target / '_PGM/_alternatives/nested/ignored.mra').exists())
+        self.assertTrue((self.target / '_PGM/other/nested/ignored.mra').exists())
         self.assertFalse((self.target / 'utils/untrusted.py').exists())
 
     def test_malformed_mra(self):
@@ -236,10 +236,10 @@ class SynchronizationTests(unittest.TestCase):
 
     def test_allowlist_rejects_nested_and_unrelated_paths(self):
         for name in ('_PGM/game.mra', '_PGM/cores/core.rbf', 'legacy/mra/game.mra', 'legacy/cores/core.rbf',
-                     '_PGM/_alternatives/game.mra', 'legacy/mra/_alternatives/game.mra'):
+                     '_PGM/_alternatives/Region/Japan/game.mra', 'legacy/mra/_alternatives/Region/Japan/game.mra'):
             self.assertTrue(sync.allowed_path(name), name)
         for name in ('README.md', 'legacy/README.md', '.github/workflows/sync.yml',
-                     '_PGM/_alternatives/nested/game.mra', '_PGM/cores/nested/core.rbf',
+                     '_PGM/cores/nested/core.rbf',
                      'legacy/mra/nested/game.mra', '_PGM/../game.mra',
                      '_PGM/core.rbf', 'legacy/cores/game.mra', '_PGM/evil\n.mra'):
             self.assertFalse(sync.allowed_path(name), name)
@@ -382,23 +382,23 @@ class SynchronizationTests(unittest.TestCase):
         self.assertIn('- Game \\[test\\] &amp; copy.mra', report)
 
     def test_alternative_new(self):
-        self.write(self.source, '_PGM/_alternatives/new.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/Region/Japan/new.mra', MRA)
         _, counts = self.run_sync()
         self.assertEqual(counts['Alternative MRA']['NEW'], 1)
-        self.assertEqual((self.target / '_PGM/_alternatives/new.mra').read_bytes(), MRA)
+        self.assertEqual((self.target / '_PGM/_alternatives/Region/Japan/new.mra').read_bytes(), MRA)
         self.assertFalse((self.target / 'legacy/mra/_alternatives').exists())
 
     def test_alternative_updated_no_archive(self):
-        self.write(self.target, '_PGM/_alternatives/game.mra', MRA)
-        self.write(self.source, '_PGM/_alternatives/game.mra', UPDATED)
+        self.write(self.target, '_PGM/_alternatives/Region/Japan/game.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/Region/Japan/game.mra', UPDATED)
         _, counts = self.run_sync()
         self.assertEqual(counts['Alternative MRA']['UPDATED'], 1)
-        self.assertEqual((self.target / '_PGM/_alternatives/game.mra').read_bytes(), UPDATED)
+        self.assertEqual((self.target / '_PGM/_alternatives/Region/Japan/game.mra').read_bytes(), UPDATED)
         self.assertFalse((self.target / 'legacy/mra/_alternatives').exists())
 
     def test_alternative_unchanged(self):
         for root in (self.target, self.source):
-            self.write(root, '_PGM/_alternatives/game.mra', MRA)
+            self.write(root, '_PGM/_alternatives/Region/Japan/game.mra', MRA)
         before = sync.snapshot(self.target)
         changes, counts = self.run_sync()
         self.assertEqual(changes, {})
@@ -407,37 +407,38 @@ class SynchronizationTests(unittest.TestCase):
 
     def test_alternative_removed_exact_legacy_copy(self):
         for root in (self.target, self.source):
-            self.write(root, '_PGM/_alternatives/retained.mra', MRA)
-        self.write(self.target, '_PGM/_alternatives/removed.mra', UPDATED)
+            self.write(root, '_PGM/_alternatives/Region/Japan/retained.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/Region/Japan/removed.mra', UPDATED)
         _, counts = self.run_sync()
         self.assertEqual(counts['Alternative MRA']['REMOVED'], 1)
-        self.assertFalse((self.target / '_PGM/_alternatives/removed.mra').exists())
-        self.assertEqual((self.target / 'legacy/mra/_alternatives/removed.mra').read_bytes(), UPDATED)
+        self.assertFalse((self.target / '_PGM/_alternatives/Region/Japan/removed.mra').exists())
+        self.assertEqual((self.target / 'legacy/mra/_alternatives/Region/Japan/removed.mra').read_bytes(), UPDATED)
 
     def test_alternative_returning_retains_history(self):
-        self.write(self.target, 'legacy/mra/_alternatives/returned.mra', MRA)
-        self.write(self.source, '_PGM/_alternatives/returned.mra', UPDATED)
+        self.write(self.target, 'legacy/mra/_alternatives/Region/Japan/returned.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/Region/Japan/returned.mra', UPDATED)
         self.run_sync()
-        self.assertEqual((self.target / '_PGM/_alternatives/returned.mra').read_bytes(), UPDATED)
-        self.assertEqual((self.target / 'legacy/mra/_alternatives/returned.mra').read_bytes(), MRA)
+        self.assertEqual((self.target / '_PGM/_alternatives/Region/Japan/returned.mra').read_bytes(), UPDATED)
+        self.assertEqual((self.target / 'legacy/mra/_alternatives/Region/Japan/returned.mra').read_bytes(), MRA)
 
     def test_alternative_collision_aborts_whole_plan(self):
-        self.write(self.target, '_PGM/_alternatives/removed.mra', MRA)
-        self.write(self.target, 'legacy/mra/_alternatives/removed.mra', UPDATED)
-        self.write(self.source, '_PGM/_alternatives/retained.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/Region/Japan/removed.mra', MRA)
+        self.write(self.target, 'legacy/mra/_alternatives/Region/Japan/removed.mra', UPDATED)
+        self.write(self.source, '_PGM/_alternatives/Region/Japan/retained.mra', MRA)
         self.write(self.source, '_PGM/new.mra', UPDATED)
         self.assert_abort()
 
     def test_alternative_missing_or_empty_source_fails_closed(self):
-        self.write(self.target, '_PGM/_alternatives/active.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/Region/Japan/active.mra', MRA)
         self.assert_abort()
-        (self.source / '_PGM/_alternatives').mkdir()
+        (self.source / '_PGM/_alternatives/Region/Japan').mkdir(parents=True)
         self.assert_abort()
-        self.write(self.source, '_PGM/_alternatives/nested/active.mra', MRA)
-        self.assert_abort()
+        self.write(self.source, '_PGM/_alternatives/Region/Japan/nested/active.mra', MRA)
+        changes, counts, _, _ = sync.plan(self.target, self.source, self.tokens)
+        self.assertEqual(counts['Alternative MRA']['NEW'], 1)
 
     def test_alternative_unreadable_source_fails_closed(self):
-        self.write(self.source, '_PGM/_alternatives/active.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/Region/Japan/active.mra', MRA)
         original = sync.Path.iterdir
         def iterdir(path):
             if path == self.source / '_PGM/_alternatives':
@@ -457,32 +458,30 @@ class SynchronizationTests(unittest.TestCase):
                 self.assert_abort()
                 path.unlink()
 
-    def test_alternative_nested_and_unrelated_files_ignored(self):
+    def test_alternative_unrelated_files_ignored(self):
         for root in (self.source, self.target):
-            self.write(root, '_PGM/_alternatives/nested/game.mra', MRA)
-            self.write(root, '_PGM/other/game.mra', MRA)
-        self.write(self.source, '_PGM/_alternatives/nested/game.mra', UPDATED)
+            for name in ('_PGM/other/game.mra', '_PGM/_alternatives/Region/Japan/nested/README.md',
+                         '_PGM/_alternatives/Region/Japan/nested/image.png', '_PGM/_alternatives/Region/Japan/.hidden/game.mra',
+                         '_PGM/_alternatives/Region/Japan/nested/.hidden.mra'):
+                self.write(root, name, MRA)
         self.write(self.source, '_PGM/other/game.mra', UPDATED)
         before = sync.snapshot(self.target)
         changes, _ = self.run_sync()
         self.assertEqual(changes, {})
         self.assertEqual(sync.snapshot(self.target), before)
-        for path in ('_PGM/_alternatives/nested/game.mra',
-                     'legacy/mra/_alternatives/nested/game.mra', '_PGM/other/game.mra'):
-            self.assertFalse(sync.allowed_path(path))
 
     def test_alternative_preview_lists_changes_only(self):
         for root in (self.source, self.target):
-            self.write(root, '_PGM/_alternatives/unchanged.mra', MRA)
-            self.write(root, '_PGM/_alternatives/updated.mra', MRA)
-        self.write(self.source, '_PGM/_alternatives/updated.mra', UPDATED)
-        self.write(self.source, '_PGM/_alternatives/added.mra', MRA)
-        self.write(self.target, '_PGM/_alternatives/removed.mra', MRA)
+            self.write(root, '_PGM/_alternatives/Region/Japan/unchanged.mra', MRA)
+            self.write(root, '_PGM/_alternatives/Region/Japan/updated.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/Region/Japan/updated.mra', UPDATED)
+        self.write(self.source, '_PGM/_alternatives/Region/Japan/added.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/Region/Japan/removed.mra', MRA)
         result, output, report = self.preview_output()
         self.assertEqual(result, 0)
         for text in (output, report):
             self.assertIn('Alternative MRA\nAdded: 1\nUpdated: 1\nRemoved: 1\nUnchanged: 1', text)
-            self.assertIn('Alternative MRA\n\nAdded:\n- added.mra\n\nUpdated:\n- updated.mra\n\nRemoved → Legacy:\n- removed.mra', text)
+            self.assertIn('Alternative MRA\n\nAdded:\n- Region/Japan/added.mra\n\nUpdated:\n- Region/Japan/updated.mra\n\nRemoved → Legacy:\n- Region/Japan/removed.mra', text)
             self.assertNotIn('unchanged.mra', text)
 
     def test_alternative_independent_removal_guard_and_confirmation(self):
@@ -497,8 +496,8 @@ class SynchronizationTests(unittest.TestCase):
 
     def test_alternative_confirmation_mismatch_aborts_before_application(self):
         for root in (self.source, self.target):
-            self.write(root, '_PGM/_alternatives/retained.mra', MRA)
-        self.write(self.target, '_PGM/_alternatives/removed.mra', MRA)
+            self.write(root, '_PGM/_alternatives/Region/Japan/retained.mra', MRA)
+        self.write(self.target, '_PGM/_alternatives/Region/Japan/removed.mra', MRA)
         before = sync.snapshot(self.target)
         def clone(*args, **kwargs):
             sync.shutil.copytree(self.source, Path(args[0][-1]))
@@ -550,6 +549,96 @@ class SynchronizationTests(unittest.TestCase):
         self.assertEqual(sync.snapshot(self.target), before)
 
 
+    def test_recursive_identity_and_directory_creation(self):
+        for name in ('Set A/game.mra', 'Set B/game.mra', 'root.mra'):
+            self.write(self.source, '_PGM/_alternatives/' + name, MRA)
+        _, counts = self.run_sync()
+        self.assertEqual(counts['Alternative MRA']['NEW'], 3)
+        for name in ('Set A/game.mra', 'Set B/game.mra', 'root.mra'):
+            self.assertEqual((self.target / '_PGM/_alternatives' / name).read_bytes(), MRA)
+
+    def test_recursive_cleanup_preserves_unmanaged_content(self):
+        self.write(self.source, '_PGM/_alternatives/retained.mra', MRA)
+        for name in ('Empty/Deep/game.mra', 'Notes/game.mra', 'Other/game.mra'):
+            self.write(self.target, '_PGM/_alternatives/' + name, UPDATED)
+        self.write(self.target, '_PGM/_alternatives/Notes/README.md', b'Keep')
+        (self.target / '_PGM/_alternatives/Other/unmanaged').mkdir()
+        self.run_sync()
+        self.assertFalse((self.target / '_PGM/_alternatives/Empty').exists())
+        self.assertEqual((self.target / '_PGM/_alternatives/Notes/README.md').read_bytes(), b'Keep')
+        self.assertTrue((self.target / '_PGM/_alternatives/Other/unmanaged').is_dir())
+        self.assertEqual((self.target / 'legacy/mra/_alternatives/Empty/Deep/game.mra').read_bytes(), UPDATED)
+
+    def test_recursive_unsafe_paths(self):
+        for relative in ('../escape.mra', '/absolute.mra', 'A/../escape.mra',
+                         'A//game.mra', 'A/game\x00.mra', 'A/game\n.mra',
+                         'C:/game.mra', 'A\\game.mra', 'A/hidden\x7f.mra'):
+            with self.subTest(relative=relative):
+                self.assertFalse(sync.allowed_path('_PGM/_alternatives/' + relative))
+                with self.assertRaises(sync.SyncError):
+                    sync.checked_path(self.target, relative)
+
+    def test_allowlist_independent_of_inventory_configuration(self):
+        with patch.dict(sync.GROUPS, {'Other': ('docs', '.mra', 'archive')}):
+            self.assertFalse(sync.allowed_path('docs/unowned.mra'))
+            self.assertFalse(sync.allowed_path('archive/unowned.mra'))
+            self.assertTrue(sync.allowed_path('_PGM/_alternatives/Set/game.mra'))
+
+    def test_recursive_symlink_rejected(self):
+        folder = self.source / '_PGM/_alternatives/Set'
+        folder.mkdir(parents=True)
+        try:
+            (folder / 'linked').symlink_to(self.target / '_PGM', target_is_directory=True)
+        except OSError:
+            self.skipTest('Symlink creation unavailable on this host')
+        self.assert_abort()
+
+    def test_recursive_validation_and_disclosure(self):
+        for name, content in [('Set/bad.mra', b'broken'),
+                              ('Set/game.mra', b'<misterromdescription>private-owner</misterromdescription>'),
+                              ('private-repository/game.mra', MRA), ('Set/private-owner.mra', MRA)]:
+            with self.subTest(name=name):
+                self.write(self.source, '_PGM/_alternatives/' + name, content)
+                result, output, report = self.preview_output()
+                self.assertEqual(result, 1)
+                self.assertEqual(report, '')
+                self.assertNotIn('private-owner', output)
+                self.assertNotIn('private-repository', output)
+                (self.source / '_PGM/_alternatives' / name).unlink()
+
+    def test_recursive_removal_percentage_and_counts(self):
+        for number in range(5):
+            name = f'_PGM/_alternatives/Set {number}/game.mra'
+            self.write(self.target, name, MRA)
+            if number:
+                self.write(self.source, name, MRA)
+        _, counts, _, _ = sync.plan(self.target, self.source, self.tokens)
+        sync.removal_guard(counts, True, {})
+        sync.removal_guard(counts, False, {'MRA': 0, 'Cores': 0, 'Alternative MRA': 1})
+        (self.source / '_PGM/_alternatives/Set 1/game.mra').unlink()
+        _, counts, _, _ = sync.plan(self.target, self.source, self.tokens)
+        with self.assertRaises(sync.SyncError):
+            sync.removal_guard(counts, True, {})
+        with self.assertRaises(sync.SyncError):
+            sync.removal_guard(counts, False, {'MRA': 0, 'Cores': 0, 'Alternative MRA': 1})
+
+    def test_recursive_preview_preserves_directories(self):
+        self.write(self.target, '_PGM/_alternatives/Old/removed.mra', MRA)
+        self.write(self.source, '_PGM/_alternatives/New/added.mra', MRA)
+        directories = {p.relative_to(self.target) for p in self.target.rglob('*') if p.is_dir()}
+        result, _, _ = self.preview_output()
+        self.assertEqual(result, 0)
+        self.assertEqual(directories, {p.relative_to(self.target) for p in self.target.rglob('*') if p.is_dir()})
+
+    def test_recursive_failure_rolls_back_created_directories(self):
+        self.write(self.source, '_PGM/_alternatives/New/Deep/game.mra', MRA)
+        changes, _, expected, baseline = sync.plan(self.target, self.source, self.tokens)
+        with patch.object(sync, 'verify_final', side_effect=sync.SyncError('Fixture failure')):
+            with self.assertRaises(sync.SyncError):
+                sync.apply(self.target, changes, expected, baseline)
+        self.assertEqual(sync.snapshot(self.target), baseline)
+        self.assertFalse((self.target / '_PGM/_alternatives').exists())
+
 class GitPublicationTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -596,9 +685,9 @@ class GitPublicationTests(unittest.TestCase):
         for number in range(4):
             (self.root / f'_PGM/cores/removed{number}.rbf').write_bytes(b'last-known-core')
         for root in (self.root, self.source):
-            (root / '_PGM/_alternatives').mkdir()
-            (root / '_PGM/_alternatives/retained.mra').write_bytes(MRA)
-        (self.root / '_PGM/_alternatives/removed.mra').write_bytes(UPDATED)
+            (root / '_PGM/_alternatives/Region/Japan').mkdir(parents=True)
+            (root / '_PGM/_alternatives/Region/Japan/retained.mra').write_bytes(MRA)
+        (self.root / '_PGM/_alternatives/Region/Japan/removed.mra').write_bytes(UPDATED)
         self.git(self.root, 'add', '.')
         self.git(self.root, 'commit', '-m', 'Four removed core fixtures')
         self.git(self.root, 'push')
@@ -634,7 +723,7 @@ class GitPublicationTests(unittest.TestCase):
         self.assertIn('Removed: 4', output.getvalue())
         for number in range(4):
             self.assertIn(f'- removed{number}.rbf', output.getvalue())
-        self.assertIn('Alternative MRA\n\nAdded:\n(none)\n\nUpdated:\n(none)\n\nRemoved → Legacy:\n- removed.mra', output.getvalue())
+        self.assertIn('Alternative MRA\n\nAdded:\n(none)\n\nUpdated:\n(none)\n\nRemoved → Legacy:\n- Region/Japan/removed.mra', output.getvalue())
 
     def test_unrelated_staged_path_aborts_before_commit_or_push(self):
         changes, expected, baseline = self.prepare()
@@ -703,10 +792,10 @@ class GitPublicationTests(unittest.TestCase):
 
     def test_alternative_staging_and_removed_legacy_bytes(self):
         for root in (self.root, self.source):
-            (root / '_PGM/_alternatives').mkdir()
-            (root / '_PGM/_alternatives/retained.mra').write_bytes(MRA)
-        (self.root / '_PGM/_alternatives/removed.mra').write_bytes(UPDATED)
-        (self.source / '_PGM/_alternatives/new.mra').write_bytes(MRA)
+            (root / '_PGM/_alternatives/Region/Japan').mkdir(parents=True)
+            (root / '_PGM/_alternatives/Region/Japan/retained.mra').write_bytes(MRA)
+        (self.root / '_PGM/_alternatives/Region/Japan/removed.mra').write_bytes(UPDATED)
+        (self.source / '_PGM/_alternatives/Region/Japan/new.mra').write_bytes(MRA)
         self.git(self.root, 'add', '.')
         self.git(self.root, 'commit', '-m', 'Alternative fixtures')
         self.git(self.root, 'push')
@@ -714,27 +803,35 @@ class GitPublicationTests(unittest.TestCase):
         sync.apply(self.root, changes, expected, baseline)
         subject = sync.commit_subject(b'Refresh alternate game definitions', changes, ['private-owner'])
         self.assertEqual(subject, 'Update alternative MRA files')
+        self.git(self.root, 'add', '--', *changes)
+        legacy = self.root / 'legacy/mra/_alternatives/Region/Japan/removed.mra'
+        legacy.write_bytes(MRA)
+        self.git(self.root, 'add', 'legacy/mra/_alternatives/Region/Japan/removed.mra')
+        with self.assertRaisesRegex(sync.SyncError, 'bytes'):
+            sync.verify_staged(self.root, changes)
+        legacy.write_bytes(UPDATED)
+        self.git(self.root, 'reset', '--mixed', 'HEAD')
         sync.publish(self.root, changes, expected, baseline, subject)
-        self.assertEqual(self.git(self.remote, 'show', 'main:legacy/mra/_alternatives/removed.mra'), UPDATED)
-        self.assertEqual(self.git(self.remote, 'show', 'main:_PGM/_alternatives/new.mra'), MRA)
+        self.assertEqual(self.git(self.remote, 'show', 'main:legacy/mra/_alternatives/Region/Japan/removed.mra'), UPDATED)
+        self.assertEqual(self.git(self.remote, 'show', 'main:_PGM/_alternatives/Region/Japan/new.mra'), MRA)
         self.assertEqual(self.git(self.remote, 'log', '-1', '--format=%s').strip(), subject.encode())
         self.assertEqual(self.git(self.remote, 'log', '-1', '--format=%an|%ae').strip(),
                          b'PGM Preservation Bot|pgm-preservation-bot@users.noreply.github.com')
 
     def test_alternative_staged_bytes_and_nested_path_violation(self):
-        (self.source / '_PGM/_alternatives').mkdir()
-        (self.source / '_PGM/_alternatives/new.mra').write_bytes(MRA)
+        (self.source / '_PGM/_alternatives/Region/Japan').mkdir(parents=True)
+        (self.source / '_PGM/_alternatives/Region/Japan/new.mra').write_bytes(MRA)
         changes, _, expected, baseline = sync.plan(self.root, self.source, ['private-owner'])
         sync.apply(self.root, changes, expected, baseline)
         self.git(self.root, 'add', '--', *changes)
         sync.verify_staged(self.root, changes)
-        (self.root / '_PGM/_alternatives/new.mra').write_bytes(UPDATED)
-        self.git(self.root, 'add', '_PGM/_alternatives/new.mra')
+        (self.root / '_PGM/_alternatives/Region/Japan/new.mra').write_bytes(UPDATED)
+        self.git(self.root, 'add', '_PGM/_alternatives/Region/Japan/new.mra')
         with self.assertRaisesRegex(sync.SyncError, 'bytes'):
             sync.verify_staged(self.root, changes)
-        (self.root / '_PGM/_alternatives/nested').mkdir()
-        (self.root / '_PGM/_alternatives/nested/outside.mra').write_bytes(MRA)
-        self.git(self.root, 'add', '_PGM/_alternatives/nested/outside.mra')
+        (self.root / '_PGM/_alternatives/Region/Japan/nested').mkdir(parents=True)
+        (self.root / '_PGM/_alternatives/Region/Japan/nested/outside.mra').write_bytes(MRA)
+        self.git(self.root, 'add', '_PGM/_alternatives/Region/Japan/nested/outside.mra')
         with self.assertRaisesRegex(sync.SyncError, 'boundary'):
             sync.verify_staged(self.root, changes)
         self.assertEqual(self.git(self.remote, 'rev-parse', 'main'), self.initial_sha)
@@ -773,7 +870,7 @@ class CommitNamingTests(unittest.TestCase):
 
     def test_safe_alternative_subject(self):
         self.assertEqual(self.name(b'Update alternate game definitions',
-                                  {'_PGM/_alternatives/game.mra': MRA}), 'Update alternative MRA files')
+                                  {'_PGM/_alternatives/Region/Japan/game.mra': MRA}), 'Update alternative MRA files')
 
     def test_safe_combined_subject_and_verified_specific_core(self):
         changes = {'_PGM/cores/PGM-027A-TYPE1.rbf': b'core', '_PGM/game.mra': MRA}
