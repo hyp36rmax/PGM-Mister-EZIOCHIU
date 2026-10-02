@@ -142,7 +142,6 @@ def display_path(path, group):
 
 
 def notes(day, baseline, changes, current, subjects=()):
-    significant, reasons, updates = significance(changes)
     lines = ['## PGM MiSTer FPGA Public Beta', '',
              'PGM FPGA core originally developed by Eizo Chiu.', '']
     if baseline is None:
@@ -169,7 +168,7 @@ def notes(day, baseline, changes, current, subjects=()):
                     lines += [action + ' ' + group + ' artifacts:', '']
                     lines += ['- ' + display_path(p, group) for p in paths[:20]]
                     if len(paths) > 20:
-                        lines.append(f'- {len(paths) - 20} more; see the artifact diff')
+                        lines.append(f'- {len(paths) - 20} additional artifacts')
                     lines.append('')
     lines += ['### Package', ''] + [f'- {group}: {len(items)}' for group, items in current.items()]
     return '\n'.join(lines) + '\n'

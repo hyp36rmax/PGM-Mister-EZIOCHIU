@@ -154,6 +154,14 @@ class SignificanceTests(unittest.TestCase):
         self.assertIn('Updated 1 compiled core', text)
         self.assertIn('Eizo Chiu', text)
 
+    def test_large_addition_notes_remain_concise(self):
+        changes = self.changes()
+        changes['Alternative MRA']['Added'] = [f'_PGM/_alternatives/Set/game{i}.mra' for i in range(21)]
+        text = release.notes(DAY, BASE_TAG, changes, {g: {} for g in release.GROUPS})
+        self.assertIn('Added 21 alternative MRA files', text)
+        self.assertIn('1 additional artifacts', text)
+        self.assertNotIn('see the artifact diff', text)
+
     def test_allowlist_excludes_unmanaged_and_unsafe_paths(self):
         for path in ('legacy/mra/game.mra', 'docs/game.mra', 'scripts/x.py', 'tests/x.py',
                      '_PGM/cores/nested/core.rbf', '_PGM/nested/game.mra',
