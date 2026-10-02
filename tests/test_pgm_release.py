@@ -159,7 +159,7 @@ class SignificanceTests(unittest.TestCase):
         changes['Alternative MRA']['Added'] = [f'_PGM/_alternatives/Set/game{i}.mra' for i in range(21)]
         text = release.notes(DAY, BASE_TAG, changes, {g: {} for g in release.GROUPS})
         self.assertIn('Added 21 alternative MRA files', text)
-        self.assertIn('1 additional artifacts', text)
+        self.assertIn('1 additional artifact\n', text)
         self.assertNotIn('see the artifact diff', text)
 
     def test_allowlist_excludes_unmanaged_and_unsafe_paths(self):

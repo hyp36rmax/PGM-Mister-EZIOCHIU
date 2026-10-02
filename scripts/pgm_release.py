@@ -168,7 +168,8 @@ def notes(day, baseline, changes, current, subjects=()):
                     lines += [action + ' ' + group + ' artifacts:', '']
                     lines += ['- ' + display_path(p, group) for p in paths[:20]]
                     if len(paths) > 20:
-                        lines.append(f'- {len(paths) - 20} additional artifacts')
+                        extra = len(paths) - 20
+                        lines.append(f'- {extra} additional artifact' + ('s' if extra != 1 else ''))
                     lines.append('')
     lines += ['### Package', ''] + [f'- {group}: {len(items)}' for group, items in current.items()]
     return '\n'.join(lines) + '\n'
@@ -190,8 +191,10 @@ def evaluation_report(day, baseline, changes, current, subjects=()):
         if significant:
             lines += ['', 'Release triggered by:'] + ['- ' + reason for reason in reasons]
         else:
+            accumulated = (f'{updates} MRA update' + (' remains' if updates == 1 else 's remain') +
+                           ' accumulated since the previous release.')
             lines += ['', 'No significant PGM release changes detected.',
-                      f'{updates} MRA updates remain accumulated since the previous release.',
+                      accumulated,
                       'No release published.']
     if significant or baseline is None:
         lines += ['', 'Proposed title: PGM MiSTer FPGA Public Beta - ' + day.isoformat(),
