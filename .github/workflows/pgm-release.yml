@@ -1,0 +1,81 @@
+name: PGM Weekly Release
+
+on:
+  schedule:
+    - cron: '0 18 * * 5'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish release after reviewing a preview'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pgm-preservation-release
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      significant: ${{ steps.preview.outputs.significant }}
+      commit: ${{ steps.preview.outputs.commit }}
+      baseline: ${{ steps.preview.outputs.baseline }}
+      baseline_commit: ${{ steps.preview.outputs.baseline_commit }}
+      date: ${{ steps.preview.outputs.date }}
+    steps:
+      - name: Checkout current preservation distribution
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Test synchronization and release logic
+        run: python3 -B -m unittest discover -s tests -p 'test_pgm*.py' -v
+      - name: Preview weekly release
+        id: preview
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B scripts/pgm_release.py --output "$RUNNER_TEMP/pgm-release-preview"
+      - name: Save release preview for review
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pgm-release-preview-${{ github.run_id }}
+          path: ${{ runner.temp }}/pgm-release-preview/
+          retention-days: 14
+          if-no-files-found: error
+
+  publish:
+    needs: evaluate
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == true && needs.evaluate.outputs.significant == 'true'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout evaluated preservation commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ needs.evaluate.outputs.commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Test publication logic
+        run: python3 -B -m unittest discover -s tests -p 'test_pgm*.py' -v
+      - name: Revalidate and publish reviewed release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVALUATED_COMMIT: ${{ needs.evaluate.outputs.commit }}
+          EVALUATED_BASELINE: ${{ needs.evaluate.outputs.baseline }}
+          EVALUATED_BASELINE_COMMIT: ${{ needs.evaluate.outputs.baseline_commit }}
+          EVALUATED_DATE: ${{ needs.evaluate.outputs.date }}
+        run: |
+          python3 -B scripts/pgm_release.py --publish \
+            --expected-commit "$EVALUATED_COMMIT" --expected-baseline "$EVALUATED_BASELINE" \
+            --expected-baseline-commit "$EVALUATED_BASELINE_COMMIT" \
+            --expected-date "$EVALUATED_DATE" \
+            --output "$RUNNER_TEMP/pgm-release-publication"
