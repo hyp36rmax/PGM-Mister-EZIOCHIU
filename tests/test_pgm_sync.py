@@ -3,8 +3,11 @@ import io
 from contextlib import redirect_stdout
 from pathlib import Path
 import tempfile
+import sys
 import unittest
 from unittest.mock import patch
+
+sys.path.insert(0, str(Path(__file__).parents[1] / 'scripts'))
 
 spec = importlib.util.spec_from_file_location('pgm_sync', Path(__file__).parents[1] / 'scripts/sync_pgm_artifacts.py')
 sync = importlib.util.module_from_spec(spec)
@@ -878,7 +881,7 @@ class CommitNamingTests(unittest.TestCase):
                          'Update MRA files and PGM-027A core')
         self.assertEqual(self.name(b'Fix KOV2 MRA and update core',
                                   {'_PGM/KOV2.mra': MRA, '_PGM/cores/PGM.rbf': b'core'}),
-                         'Update KOV2 MRA files and PGM core')
+                         'Update Knights of Valour 2 MRA and PGM core')
 
     def test_mismatched_categories_or_feature_use_fallback(self):
         for subject, changes in [(b'Update core and MRAs', {'_PGM/game.mra': MRA}),
@@ -924,6 +927,108 @@ class CommitNamingTests(unittest.TestCase):
     def test_no_artifact_changes_or_verbatim_subject_uses_fallback(self):
         self.assertEqual(self.name(b'Refresh core', {}), sync.FALLBACK_SUBJECT)
         self.assertEqual(self.name(b'Update PGM core', {'_PGM/cores/PGM.rbf': b'core'}), sync.FALLBACK_SUBJECT)
+
+
+class RichContextTests(unittest.TestCase):
+    tokens = CommitNamingTests.tokens
+    sha = CommitNamingTests.sha
+    name = CommitNamingTests.name
+    def test_supported_titles(self):
+        cases = [('Demon Front', 'dmnfrnt'), ('Knights of Valour', 'kov'),
+                 ('Knights of Valour 2', 'kov2'), ('Oriental Legend', 'orlegend'),
+                 ('DoDonPachi II', 'ddp2'), ('Martial Masters', 'martmast'),
+                 ('Knights of Valour Plus', 'kovplus'),
+                 ('Knights of Valour Super Heroes', 'kovsh'),
+                 ('Oriental Legend Super', 'olds'), ('The Killing Blade', 'killbld'),
+                 ('The Gladiator', 'theglad'), ('Spectral vs Generation', 'svg'),
+                 ('Dragon World', 'drgw3'), ('Photo Y2K', 'photoy2k'),
+                 ('Puzzli 2', 'puzzli2'), ('Puzzle Star', 'puzlstar'), ('Happy 6-in-1', 'happy6')]
+        for title, alias in cases:
+            with self.subTest(title=title):
+                self.assertEqual(self.name(('Fix ' + title + ' MRA').encode(),
+                                          {'_PGM/' + alias + '.mra': MRA}),
+                                 'Update ' + title + ' MRA')
+
+    def test_long_primary_filename(self):
+        self.assertEqual(self.name(b'Correct Demon Front definitions',
+                                  {'_PGM/Demon Front - Moyu Zhanxian (World).mra': MRA}),
+                         'Update Demon Front MRA')
+
+    def test_alternative_hierarchy(self):
+        self.assertEqual(self.name(b'Fix Demon Front alternative MRA',
+                                  {'_PGM/_alternatives/_Demon Front/Region/revision.mra': MRA}),
+                         'Update Demon Front alternative MRA')
+
+    def test_added_revision_requires_new_active_artifact(self):
+        changes = {'_PGM/_alternatives/_Knights of Valour/revision.mra': MRA}
+        self.assertEqual(sync.commit_subject(b'Add KOV revision', changes, self.tokens, baseline={}),
+                         'Add Knights of Valour MRA revision')
+        for baseline in (None, dict(changes)):
+            self.assertEqual(sync.commit_subject(b'Add KOV revision', changes, self.tokens, baseline=baseline),
+                             sync.FALLBACK_SUBJECT)
+
+    def test_neutral_removed_title(self):
+        changes = {'_PGM/_alternatives/_Knights of Valour/revision.mra': None,
+                   'legacy/mra/_alternatives/_Knights of Valour/revision.mra': MRA}
+        self.assertEqual(self.name(b'Remove KOV alternative MRA', changes),
+                         'Remove Knights of Valour alternative MRA')
+        self.assertEqual(self.name(b'Remove superseded KOV alternative MRA', changes), sync.FALLBACK_SUBJECT)
+
+    def test_title_must_cover_actual_changes(self):
+        for subject, changes in [(b'Fix Demon Front MRA', {'_PGM/orlegend.mra': MRA}),
+                                 (b'Fix Demon Front MRA', {'_PGM/dmnfrnt.mra': MRA, '_PGM/unknown.mra': MRA}),
+                                 (b'Fix KOV MRA', {'_PGM/kov2.mra': MRA}),
+                                 (b'Fix DoDonPachi II MRA', {'_PGM/DoDonPachi III (World).mra': MRA}),
+                                 (b'Fix Demon Front alternative MRA',
+                                  {'_PGM/_alternatives/_Demon Front/orlegend.mra': MRA})]:
+            with self.subTest(subject=subject, changes=changes):
+                self.assertEqual(self.name(subject, changes), sync.FALLBACK_SUBJECT)
+
+    def test_no_unverified_behavior_claims(self):
+        for subject in (b'Fix Demon Front compatibility', b'Resolve Demon Front crash',
+                        b'Update Demon Front protection MRA', b'Fix game timing',
+                        b'Update Demon Front MRA main', b'Fix Demon Front MRA private-owner'):
+            self.assertEqual(self.name(subject, {'_PGM/dmnfrnt.mra': MRA}), sync.FALLBACK_SUBJECT)
+
+    def test_multiple_related_files(self):
+        self.assertEqual(self.name(b'Fix Oriental Legend definitions',
+                                  {'_PGM/Oriental Legend (World).mra': MRA,
+                                   '_PGM/Oriental Legend (Japan).mra': MRA}),
+                         'Update Oriental Legend MRA files')
+
+    def test_two_titles_and_many_titles(self):
+        self.assertEqual(self.name(b'Fix Demon Front and Oriental Legend MRAs',
+                                  {'_PGM/dmnfrnt.mra': MRA, '_PGM/orlegend.mra': MRA}),
+                         'Update Demon Front and Oriental Legend MRAs')
+        self.assertEqual(self.name(b'Fix Demon Front and Oriental Legend and KOV2 MRAs',
+                                  {'_PGM/dmnfrnt.mra': MRA, '_PGM/orlegend.mra': MRA, '_PGM/kov2.mra': MRA}),
+                         'Update PGM MRA files')
+
+    def test_combined_title_and_core(self):
+        self.assertEqual(self.name(b'Fix Demon Front and update core',
+                                  {'_PGM/dmnfrnt.mra': MRA, '_PGM/cores/PGM.rbf': b'core'}),
+                         'Update Demon Front MRA and PGM core')
+
+    def test_title_privacy_and_verbatim_guards(self):
+        changes = {'_PGM/dmnfrnt.mra': MRA}
+        for identity in ('Demon Front', 'Update Demon Front MRA'):
+            self.assertEqual(self.name(b'Fix Demon Front MRA', changes, (identity,)), sync.FALLBACK_SUBJECT)
+        self.assertEqual(self.name(b'Update Demon Front MRA', changes), sync.FALLBACK_SUBJECT)
+        output = io.StringIO()
+        with redirect_stdout(output):
+            self.name(b'Fix Demon Front MRA', changes)
+        self.assertEqual(output.getvalue(), '')
+
+    def test_subject_length_and_uncertain_titles(self):
+        self.assertEqual(self.name(b'Fix Knights of Valour Super Heroes Plus and Oriental Legend Super Plus MRAs',
+                                  {'_PGM/kovshp.mra': MRA, '_PGM/oldsplus.mra': MRA}), sync.FALLBACK_SUBJECT)
+        self.assertEqual(self.name(b'Fix KOV MRA', {'_PGM/Knights of Valour 3 (World).mra': MRA}),
+                         sync.FALLBACK_SUBJECT)
+
+    def test_uncertain_variant_cannot_inherit_folder_title(self):
+        self.assertEqual(self.name(b'Fix KOV alternative MRA',
+                                  {'_PGM/_alternatives/_Knights of Valour/Knights of Valour 3.mra': MRA}),
+                         sync.FALLBACK_SUBJECT)
 
 
 if __name__ == '__main__':

@@ -14,6 +14,8 @@ from urllib.request import Request, build_opener, HTTPRedirectHandler
 import xml.etree.ElementTree as ET
 import zipfile
 
+from pgm_change_context import artifact_title, description, release_context, specific_core_path
+
 
 class ReleaseError(Exception):
     pass
@@ -124,16 +126,17 @@ def significance(changes):
 
 def safe_context(subjects, changes):
     """Recognize fixed preservation wording; never reproduce arbitrary Git subjects."""
-    context = []
+    context = release_context(subjects, changes)
     cores = changes['Cores']['Updated']
-    if cores and all('PGM-027A' in p.upper() for p in cores):
+    if cores and all(specific_core_path(p) for p in cores):
         if 'Update PGM-027A core' in subjects or 'Update MRA files and PGM-027A core' in subjects:
+            context = [text for text in context if text != 'Updated PGM-027A core']
             context.append('Updated PGM-027A core artifacts')
     mras = changes['Primary MRA']['Updated']
-    if mras and all(re.search(r'kov2|knights of valour 2', p, re.I) for p in mras):
+    if mras and all(artifact_title(p) == 'Knights of Valour 2' for p in mras):
         if 'Update KOV2 MRA files' in subjects or 'Update KOV2 MRA files and PGM core' in subjects:
-            context.append('Updated Knights of Valour 2 game definitions')
-    return context
+            context.append('Updated ' + description('MRA', {'Knights of Valour 2'}, len(mras)))
+    return list(dict.fromkeys(context))
 
 
 def display_path(path, group):
