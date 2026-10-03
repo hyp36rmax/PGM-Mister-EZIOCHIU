@@ -11,6 +11,9 @@ from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
 
 
+from pgm_change_context import normalized, parse_meaning
+
+
 class SyncError(Exception):
     pass
 
@@ -335,7 +338,7 @@ def verify_staged(root, changes):
 FALLBACK_SUBJECT = 'Update PGM beta artifacts'
 
 
-def commit_subject(message, changes, tokens, provenance=(), identity=()):
+def commit_subject(message, changes, tokens, provenance=(), identity=(), baseline=None):
     """Recognize a small safe vocabulary; never publish arbitrary source text."""
     try:
         subject = message.decode('utf-8').rstrip('\n')
@@ -347,6 +350,18 @@ def commit_subject(message, changes, tokens, provenance=(), identity=()):
             or any(sha.casefold() in subject.casefold() for sha in provenance)
             or re.search(r'\b[0-9a-fA-F]{40}\b', subject)):
         return FALLBACK_SUBJECT
+    meaning = parse_meaning(subject)
+    if meaning and (meaning[2] or meaning[0] in {'add', 'remove', 'correct', 'resolve'}):
+        active = {label: {path: content for path, content in changes.items()
+                          if managed_name(path, directory, suffix, label == 'Alternative MRA')}
+                  for label, (directory, suffix, _) in GROUPS.items()}
+        active = {label: paths for label, paths in active.items() if paths}
+        target = normalized(subject, active, baseline)
+        if (not target or target.casefold() == subject.casefold()
+                or disclosed(target.encode(), protected)
+                or any(sha.casefold() in target.casefold() for sha in provenance)):
+            return FALLBACK_SUBJECT
+        return target
     words = re.findall(r'[a-z0-9-]+', subject.casefold())
     vocabulary = {'update', 'fix', 'add', 'remove', 'refresh', 'pgm', 'core', 'cores',
                   'rbf', 'implementation', 'mra', 'mras', 'file', 'files', 'primary',
@@ -399,7 +414,7 @@ def commit_subject(message, changes, tokens, provenance=(), identity=()):
     return target
 
 
-def source_commit_subject(source, changes, tokens, provenance):
+def source_commit_subject(source, changes, tokens, provenance, baseline=None):
     context = git(source, 'log', '-1', '--format=%B%x00%an%x00%ae%x00%D').rstrip(b'\n')
     fields = context.split(b'\0')
     if len(fields) != 4:
@@ -411,7 +426,7 @@ def source_commit_subject(source, changes, tokens, provenance):
             identities.append(ref.removeprefix('HEAD -> ').removeprefix('origin/'))
     except UnicodeDecodeError:
         return FALLBACK_SUBJECT
-    return commit_subject(message, changes, tokens, provenance, identities)
+    return commit_subject(message, changes, tokens, provenance, identities, baseline)
 
 
 def publish(root, changes, expected, baseline, subject=FALLBACK_SUBJECT):
@@ -458,7 +473,7 @@ def main(argv=None):
                 raise SyncError('Source retrieval failed; no artifact changes applied.') from None
             sha = git(source, 'rev-parse', 'HEAD').decode().strip()
             changes, counts, expected, baseline = plan(root, source, tokens, (sha,))
-            subject = (source_commit_subject(source, changes, tokens, (sha,))
+            subject = (source_commit_subject(source, changes, tokens, (sha,), baseline)
                        if options.apply and changes else FALLBACK_SUBJECT)
             shutil.rmtree(source / '.git')
             report = (summary(counts, preview=True) if options.apply else

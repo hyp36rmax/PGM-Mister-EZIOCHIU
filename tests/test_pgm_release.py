@@ -8,10 +8,13 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import sys
 import unittest
 from unittest.mock import patch
 from urllib.request import Request
 import zipfile
+
+sys.path.insert(0, str(Path(__file__).parents[1] / 'scripts'))
 
 spec = importlib.util.spec_from_file_location('pgm_release', Path(__file__).parents[1] / 'scripts/pgm_release.py')
 release = importlib.util.module_from_spec(spec)
@@ -648,6 +651,136 @@ class ReleaseEngineTests(unittest.TestCase):
         self.assertIn('default: false', workflow)
         self.assertNotIn('PGM_SOURCE_URL', workflow)
         self.assertNotIn('PGM_SYNC_ENABLED', workflow)
+
+
+class RichReleaseContextTests(unittest.TestCase):
+    def changes(self):
+        return {g: {state: [] for state in ('Added', 'Updated', 'Removed')} for g in release.GROUPS}
+
+    def test_one_title(self):
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/dmnfrnt.mra']
+        self.assertEqual(release.safe_context(['Update Demon Front MRA'], changes), ['Updated Demon Front MRA'])
+
+    def test_several_titles_and_core(self):
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/dmnfrnt.mra', '_PGM/Oriental Legend (World).mra',
+                                             '_PGM/Oriental Legend (Japan).mra']
+        changes['Alternative MRA']['Added'] = ['_PGM/_alternatives/_Knights of Valour/revision.mra']
+        changes['Cores']['Updated'] = ['_PGM/cores/PGM-027A.rbf']
+        subjects = ['Update Demon Front MRA', 'Update Oriental Legend MRA files',
+                    'Add Knights of Valour MRA revision', 'Update PGM-027A core']
+        context = release.safe_context(subjects, changes)
+        self.assertEqual(len(context), 4)
+        for line in ('Updated Demon Front MRA', 'Updated Oriental Legend MRA files',
+                     'Added Knights of Valour MRA revision', 'Updated PGM-027A core artifacts'):
+            self.assertIn(line, context)
+        text = release.notes(DAY, BASE_TAG, changes, {g: {} for g in release.GROUPS}, subjects)
+        self.assertIn('Primary MRA\n\n- Added: 0\n- Updated: 3\n- Removed: 0', text)
+        self.assertIn('Alternative MRA\n\n- Added: 1\n- Updated: 0\n- Removed: 0', text)
+
+    def test_duplicate_and_equivalent_context(self):
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/Demon Front (World).mra', '_PGM/Demon Front (Japan).mra']
+        self.assertEqual(release.safe_context(['Update Demon Front MRA', 'Update Demon Front MRA files',
+                                             'Update Demon Front MRA'], changes), ['Updated Demon Front MRA files'])
+
+    def test_conflicting_title_is_ignored(self):
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/kov2.mra']
+        self.assertEqual(release.safe_context(['Update Knights of Valour MRA', 'Update Demon Front MRA'], changes), [])
+
+    def test_removed_cannot_be_added(self):
+        changes = self.changes()
+        changes['Primary MRA']['Removed'] = ['_PGM/dmnfrnt.mra']
+        self.assertEqual(release.safe_context(['Add Demon Front MRA', 'Update Demon Front MRA'], changes), [])
+        self.assertEqual(release.safe_context(['Remove Demon Front MRA'], changes), ['Removed Demon Front MRA'])
+
+    def test_updated_cannot_be_added(self):
+        changes = self.changes()
+        changes['Alternative MRA']['Updated'] = ['_PGM/_alternatives/_Knights of Valour/revision.mra']
+        self.assertEqual(release.safe_context(['Add Knights of Valour MRA revision'], changes), [])
+
+    def test_added_cannot_be_updated(self):
+        changes = self.changes()
+        changes['Primary MRA']['Added'] = ['_PGM/dmnfrnt.mra']
+        self.assertEqual(release.safe_context(['Update Demon Front MRA'], changes), [])
+
+    def test_behavior_and_arbitrary_prose_ignored(self):
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/dmnfrnt.mra']
+        subjects = ['Improved Demon Front compatibility', 'Update Demon Front crash fixes',
+                    'Fix Demon Front MRA', 'Update Demon Front MRA private-owner',
+                    'Update Demon Front MRA\nSource author', 'Update Demon Front MRA ' + 'a' * 40,
+                    'Update PGM beta artifacts']
+        self.assertEqual(release.safe_context(subjects, changes), [])
+
+    def test_combined_safe_subject(self):
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/dmnfrnt.mra']
+        changes['Cores']['Updated'] = ['_PGM/cores/PGM.rbf']
+        self.assertEqual(release.safe_context(['Update Demon Front MRA and PGM core'], changes),
+                         ['Updated PGM core', 'Updated Demon Front MRA'])
+
+    def test_multiple_title_subject(self):
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/dmnfrnt.mra', '_PGM/orlegend.mra']
+        self.assertEqual(release.safe_context(['Update Demon Front and Oriental Legend MRAs', 'Update Demon Front MRA'], changes),
+                         ['Updated Demon Front MRA', 'Updated Oriental Legend MRA'])
+
+    def test_unknown_and_conflicting_hierarchy_ignored(self):
+        changes = self.changes()
+        changes['Alternative MRA']['Added'] = ['_PGM/_alternatives/_Demon Front/orlegend.mra']
+        self.assertEqual(release.safe_context(['Add Demon Front alternative MRA'], changes), [])
+
+    def test_large_batch_has_no_title_catalogue(self):
+        from pgm_change_context import TITLES
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/' + title + ' (World).mra' for title in TITLES]
+        subjects = ['Update ' + title + ' MRA' for title in TITLES]
+        self.assertEqual(release.safe_context(subjects, changes), [])
+        text = release.notes(DAY, BASE_TAG, changes, {g: {} for g in release.GROUPS}, subjects)
+        self.assertIn(f'Updated {len(TITLES)} primary MRA files', text)
+
+
+def context_history_case(self, pause):
+    self.write('_PGM/dmnfrnt.mra', MRA)
+    self.write('_PGM/orlegend.mra', MRA)
+    self.base = self.commit('Fixture title baseline')
+    self.git('tag', '-f', BASE_TAG)
+    self.api.tags[BASE_TAG] = self.base
+    self.write('_PGM/dmnfrnt.mra', UPDATED)
+    self.commit('Update Demon Front MRA')
+    if pause:
+        first = self.evaluate()[1]
+        self.assertEqual(first['significant'], 'false')
+        self.output = Path(self.temp.name) / 'next-week-preview'
+    self.write('_PGM/orlegend.mra', UPDATED)
+    self.commit('Update Oriental Legend MRA')
+    self.significant()
+    before = self.git('status', '--porcelain')
+    report, result = self.evaluate()
+    self.assertEqual(result['baseline'], BASE_TAG)
+    self.assertIn('Updated Demon Front MRA', report)
+    self.assertIn('Updated Oriental Legend MRA', report)
+    self.assertEqual(self.git('status', '--porcelain'), before)
+    self.assertEqual(self.api.calls, [])
+
+
+# Only these two integration cases use the shared fixture.
+class ContextHistoryTests(unittest.TestCase):
+    setUp = ReleaseEngineTests.setUp
+    git = ReleaseEngineTests.git
+    write = ReleaseEngineTests.write
+    commit = ReleaseEngineTests.commit
+    evaluate = ReleaseEngineTests.evaluate
+    significant = ReleaseEngineTests.significant
+
+    def test_all_daily_commits(self):
+        context_history_case(self, False)
+
+    def test_context_survives_no_release_week(self):
+        context_history_case(self, True)
 
 
 if __name__ == '__main__':
