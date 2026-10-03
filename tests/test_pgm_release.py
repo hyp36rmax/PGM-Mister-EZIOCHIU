@@ -690,6 +690,14 @@ class RichReleaseContextTests(unittest.TestCase):
         changes['Primary MRA']['Updated'] = ['_PGM/kov2.mra']
         self.assertEqual(release.safe_context(['Update Knights of Valour MRA', 'Update Demon Front MRA'], changes), [])
 
+    def test_legacy_subject_cannot_claim_different_subfamily(self):
+        changes = self.changes()
+        changes['Primary MRA']['Updated'] = ['_PGM/Knights of Valour 2 Plus (World).mra']
+        self.assertEqual(release.safe_context(['Update KOV2 MRA files'], changes), [])
+        changes['Primary MRA']['Updated'] = ['_PGM/kov2.mra']
+        self.assertEqual(release.safe_context(['Update KOV2 MRA files', 'Update Knights of Valour 2 MRA'], changes),
+                         ['Updated Knights of Valour 2 MRA'])
+
     def test_removed_cannot_be_added(self):
         changes = self.changes()
         changes['Primary MRA']['Removed'] = ['_PGM/dmnfrnt.mra']

@@ -1025,6 +1025,11 @@ class RichContextTests(unittest.TestCase):
         self.assertEqual(self.name(b'Fix KOV MRA', {'_PGM/Knights of Valour 3 (World).mra': MRA}),
                          sync.FALLBACK_SUBJECT)
 
+    def test_uncertain_variant_cannot_inherit_folder_title(self):
+        self.assertEqual(self.name(b'Fix KOV alternative MRA',
+                                  {'_PGM/_alternatives/_Knights of Valour/Knights of Valour 3.mra': MRA}),
+                         sync.FALLBACK_SUBJECT)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -44,12 +44,24 @@ def title_at_start(text):
 def artifact_title(path):
     parts = path.split('/')
     filename = title_at_start(parts[-1])
+    # A recognized family with an unsupported variant is uncertainty, not a
+    # generic revision filename that can inherit its Alternative folder title.
+    for part in parts[2:] if path.startswith('_PGM/_alternatives/') else parts[-1:]:
+        text = part.casefold().lstrip('_').removesuffix('.mra')
+        if title_at_start(part) is None and any(text.startswith(alias + ' ') or
+                                               text.startswith(alias + '-') for alias, _ in ALIASES):
+            return None
     if path.startswith('_PGM/_alternatives/'):
         hierarchy = {title_at_start(part) for part in parts[2:-1]} - {None}
         if len(hierarchy) > 1 or (filename and hierarchy and filename not in hierarchy):
             return None
         return filename or next(iter(hierarchy), None)
     return filename
+
+
+def specific_core_path(path):
+    return bool(re.fullmatch(r'PGM-027A(?:[- ][A-Za-z0-9-]+)?\.rbf',
+                             path.rsplit('/', 1)[-1], re.I))
 
 
 def parse_meaning(subject):
@@ -112,9 +124,7 @@ def normalized(subject, active, baseline=None):
     actual_titles = {artifact_title(p) for p in mras}
     if titles and (None in actual_titles or titles != actual_titles):
         return None
-    if specific_core and (not active.get('Cores') or not all(
-            re.fullmatch(r'PGM-027A(?:[- ][A-Za-z0-9-]+)?\.rbf', p.rsplit('/', 1)[-1], re.I)
-            for p in active['Cores'])):
+    if specific_core and (not active.get('Cores') or not all(specific_core_path(p) for p in active['Cores'])):
         return None
     contents = [content for paths in active.values() for content in paths.values()]
     verb = 'Update'
@@ -156,8 +166,7 @@ def release_context(subjects, changes):
                 continue
             label = 'Primary MRA' if group == 'MRA' else group
             paths = changes[label][state]
-            matched = [p for p in paths if (not specific_core or re.fullmatch(
-                r'PGM-027A(?:[- ][A-Za-z0-9-]+)?\.rbf', p.rsplit('/', 1)[-1], re.I))] if group == 'Cores' else [
+            matched = [p for p in paths if not specific_core or specific_core_path(p)] if group == 'Cores' else [
                 p for p in paths if artifact_title(p) in titles]
             matched_titles = {artifact_title(p) for p in matched} if group != 'Cores' else set()
             if (group != 'Cores' and matched_titles != titles) or (group == 'Cores' and not matched):

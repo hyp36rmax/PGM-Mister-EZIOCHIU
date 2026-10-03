@@ -11,7 +11,7 @@ from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
 
 
-from pgm_change_context import normalized, parse_meaning
+from pgm_change_context import normalized, parse_meaning, specific_core_path
 
 
 class SyncError(Exception):
@@ -393,7 +393,7 @@ def commit_subject(message, changes, tokens, provenance=(), identity=(), baselin
         return FALLBACK_SUBJECT
     core, mra = 'PGM core', 'MRA files'
     if 'pgm-027a' in words:
-        if not actual['Cores'] or not all('PGM-027A' in name.upper() for name in actual['Cores']):
+        if not actual['Cores'] or not all(specific_core_path(name) for name in actual['Cores']):
             return FALLBACK_SUBJECT
         core = 'PGM-027A core'
     if 'kov2' in words:
